@@ -1,0 +1,8 @@
+{
+  "name": "fibonacci",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "docker": "docker-compose build && docker-compose up"
+  }
+}
