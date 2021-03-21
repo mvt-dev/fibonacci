@@ -1,9 +1,10 @@
 {
-  "name": "services",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "@fibonacci/services",
+  "private": true,
+  "version": "0.1.0",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "ts-node src/app.ts",
+    "start": "ts-node src/index.ts",
     "test": "jest --verbose"
   },
   "license": "MIT",

@@ -36,8 +36,8 @@ export default class DbModel {
         port,
       },
       pool: {
-        afterCreate: (connection: Knex.Client, callback: (err: Knex.KnexTimeoutError, connection: Knex.Client) => void) => {
-          connection.query('SET TIME ZONE \'UTC\';', (err: Knex.KnexTimeoutError) => {
+        afterCreate: (connection: Knex.Client, callback: (err: Error, connection: Knex.Client) => void) => {
+          connection.query('SET TIME ZONE \'UTC\';', (err: Error) => {
             callback(err, connection);
           });
         }
