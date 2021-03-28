@@ -1,5 +1,5 @@
 import DbModel from '../Db';
-import { Account } from '../../interfaces/Account';
+import {Account} from '../../interfaces/Account';
 
 /**
 * Account model
