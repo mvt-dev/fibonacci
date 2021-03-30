@@ -7,7 +7,8 @@ import AddIcon from '@material-ui/icons/Add';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
 import {AccountInterface} from '@fibonacci/services';
-import useRequest from '../../hooks/useRequest';
+import useService from '../../hooks/useService';
+import { list } from '../../services/accountService';
 
 interface AccountsProps {
   AccountType: typeof AccountInterface.AccountType;
@@ -16,7 +17,7 @@ interface AccountsProps {
 const Accounts = (props: AccountsProps) => {
   const {AccountType} = props;
 
-  const {data: accounts} = useRequest('/api/account');
+  const {data: accounts} = useService(list());
 
   const columns = [
     {

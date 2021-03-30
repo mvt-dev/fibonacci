@@ -5,6 +5,7 @@ import {
   ListItem,
   ListItemText,
 } from '@material-ui/core';
+import Snackbar from '../Snackbar';
 import useStyles from './Layout.style';
 
 
@@ -14,6 +15,7 @@ const Layout = (props: React.PropsWithChildren<any>): React.ReactElement => {
 
   return (
     <section>
+      <Snackbar />
       <nav>
         <List className={classes.listBox}>
           <ListItem button>

@@ -1,12 +1,18 @@
+import React, { useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
+import {useRouter} from 'next/router'
+import { useDispatch } from 'react-redux';
 import {Typography, Box, Breadcrumbs, Button} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../../components/Layout';
 import Form from '../../components/Form';
 import {Field, FieldTypes} from '../../components/Field';
 import {AccountInterface} from '@fibonacci/services';
-import useRequest from '../../hooks/useRequest';
+import useService from '../../hooks/useService';
+import { snackbarShowSuccess } from '../../store/actions/snackbar';
+import DialogAlert from '../../components/DialogAlert';
+import { get, create, update, remove } from '../../services/accountService';
 
 interface AccountsProps {
   AccountType: typeof AccountInterface.AccountType;
@@ -15,11 +21,34 @@ interface AccountsProps {
 
 const Account = (props: AccountsProps) => {
   const {AccountType, id} = props;
+  const [showRemove, setShowRemove] = useState<boolean>(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const {data: account} = useService(id !== 'new' ? get(id) : null);
 
-  const {data: account} = id !== 'new' ? useRequest(`/api/account/${id}`) : {data: null};
+  const onSubmit = async (formData) => {
+    try {
+      if (id !== 'new') {
+        await update({id, ...formData});
+        dispatch(snackbarShowSuccess('Conta atualizada com sucesso'));
+      } else {
+        await create(formData);
+        dispatch(snackbarShowSuccess('Conta criada com sucesso'));
+      }
+      router.back();
+    } catch (error) {
+      console.warn(error);
+    }
+  };
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onRemove = async () => {
+    try {
+      await remove(id);
+      router.back();
+      dispatch(snackbarShowSuccess('Conta removida com sucesso'));
+    } catch (error) {
+      console.warn(error);
+    }
   }
 
   const classes = makeStyles((theme) => ({
@@ -63,11 +92,23 @@ const Account = (props: AccountsProps) => {
             ]}
           />
         </Box>
-        <Box display="flex">
-          <Button type="submit" variant="contained" color="primary">Confirmar</Button>
-          <NextLink href="/account" replace><Button className={classes.cancelButton} variant="outlined" color="primary">Cancelar</Button></NextLink>
+        <Box display="flex" justifyContent="space-between">
+          <Box>
+            <Button type="submit" variant="contained" color="primary">Confirmar</Button>
+            <NextLink href="/account" replace><Button className={classes.cancelButton} variant="outlined" color="primary">Cancelar</Button></NextLink>
+          </Box>
+          {id !== 'new' && (
+            <Button variant="outlined" color="secondary" onClick={() => setShowRemove(true)}>Remover</Button>
+          )}
         </Box>
       </Form>
+      <DialogAlert
+        title="Remover Conta"
+        description="Confirma a remoção da conta?"
+        open={showRemove}
+        close={() => setShowRemove(false)}
+        confirm={onRemove}
+      />
     </Layout>
   );
 };

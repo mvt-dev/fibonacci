@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {useFormContext, Controller} from 'react-hook-form';
 import {TextField, MenuItem} from '@material-ui/core';
 
@@ -25,7 +25,7 @@ const Field = (props: FieldProps): React.ReactElement => {
     rules,
     options
   } = props;
-  const {control, errors} = useFormContext();
+  const {control, errors, setValue} = useFormContext();
 
   let field;
   switch (type) {
@@ -63,6 +63,10 @@ const Field = (props: FieldProps): React.ReactElement => {
       );
       break;
   }
+
+  useEffect(() => {
+    if (value) setValue(name, value);
+  }, [value]);
 
   return (
     <Controller
