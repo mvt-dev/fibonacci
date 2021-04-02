@@ -6,7 +6,7 @@ import { snackbarClose } from '../../store/actions/snackbar';
 
 const Snackbar = (): React.ReactElement => {
   const dispatch = useDispatch();
-  const { open, type, message } = useSelector((state) => state.snackbar);
+  const { open, type, message } = useSelector((state: any) => state.snackbar);
 
   const onClose = () => {
     dispatch(snackbarClose());
@@ -20,7 +20,7 @@ const Snackbar = (): React.ReactElement => {
       TransitionComponent={Slide}
       onClose={onClose}
     >
-      {type && (<Alert severity={type} closeText={null}>{message}</Alert>)}
+      {type && (<Alert variant="filled" severity={type} closeText={null}>{message}</Alert>)}
     </MaterialSnackbar>
   );
 };

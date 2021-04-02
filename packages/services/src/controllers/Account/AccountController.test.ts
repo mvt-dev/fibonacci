@@ -1,5 +1,5 @@
 import AccountController from './AccountController';
-import { ACCOUNT_TYPES } from '../../interfaces/Account';
+import { AccountInterface } from '@fibonacci/interfaces';
 import MOCK_ACCOUNTS from '../../../mock/accounts.json';
 
 const mockList = jest.fn(() => Promise.resolve(MOCK_ACCOUNTS));
@@ -46,7 +46,7 @@ describe('AccountController', () => {
     const account = {
       id: MOCK_ACCOUNTS[0].id,
       name: MOCK_ACCOUNTS[0].name,
-      type: MOCK_ACCOUNTS[0].type as ACCOUNT_TYPES,
+      type: MOCK_ACCOUNTS[0].type as AccountInterface.AccountType,
     };
     await accountController.create(account);
     expect(mockCreate).toBeCalled();
@@ -56,7 +56,7 @@ describe('AccountController', () => {
     const account = {
       id: MOCK_ACCOUNTS[0].id,
       name: MOCK_ACCOUNTS[0].name,
-      type: MOCK_ACCOUNTS[0].type as ACCOUNT_TYPES,
+      type: MOCK_ACCOUNTS[0].type as AccountInterface.AccountType,
     };
     await accountController.update(account);
     expect(mockUpdate).toBeCalled();

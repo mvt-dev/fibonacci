@@ -14,6 +14,7 @@
     "axios": "^0.21.1",
     "formidable": "^1.2.2",
     "joi": "^17.4.0",
+    "material-ui-color-picker": "^3.5.1",
     "next": "10.0.7",
     "next-redux-wrapper": "^6.0.2",
     "react": "17.0.1",

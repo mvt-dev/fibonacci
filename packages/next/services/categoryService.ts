@@ -1,7 +1,7 @@
 import request from '../libs/request';
-import { AccountInterface } from '@fibonacci/interfaces';
+import { CategoryInterface } from '@fibonacci/interfaces';
 
-const ENDPOINT = '/api/account';
+const ENDPOINT = '/api/category';
 
 export const list = async () => {
   const { data } = await request.get(ENDPOINT);
@@ -13,18 +13,20 @@ export const get = async (id: number | string) => {
   return data;
 }
 
-export const create = async ({ name, type }: AccountInterface.Account) => {
+export const create = async ({ name, color, tag }: CategoryInterface.Category) => {
   const { data } = await request.post(ENDPOINT, {
     name,
-    type,
+    color,
+    tag,
   });
   return data;
 }
 
-export const update = async ({ id, name, type }: AccountInterface.Account) => {
+export const update = async ({ id, name, color, tag }: CategoryInterface.Category) => {
   const { data } = await request.patch(`${ENDPOINT}/${id}`, {
     name,
-    type,
+    color,
+    tag,
   });
   return data;
 }

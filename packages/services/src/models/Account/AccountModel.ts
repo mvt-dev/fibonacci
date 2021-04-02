@@ -1,27 +1,27 @@
 import DbModel from '../Db';
-import {Account} from '../../interfaces/Account';
+import { AccountInterface } from '@fibonacci/interfaces';
 
 /**
 * Account model
 */
 export default class AccountModel extends DbModel {
 
-  private table:string;
+  private table: string;
 
   constructor (table = 'account') {
     super({});
     this.table = table;
   }
 
-  async list(): Promise<Account[]> {
+  async list(): Promise<AccountInterface.Account[]> {
     return this.db(this.table).orderBy('name');
   }
 
-  async get(id: number): Promise<Account> {
+  async get(id: number): Promise<AccountInterface.Account> {
     return this.db(this.table).where('id', id).first();
   }
 
-  async create(account: Account): Promise<Account> {
+  async create(account: AccountInterface.Account): Promise<AccountInterface.Account> {
     const result = await this.db(this.table).insert({
       name: account.name,
       type: account.type,
@@ -33,7 +33,7 @@ export default class AccountModel extends DbModel {
     return result[0];
   }
 
-  async update(account: Account): Promise<Account> {
+  async update(account: AccountInterface.Account): Promise<AccountInterface.Account> {
     const result = await this.db(this.table).where('id', account.id).update({
       name: account.name,
       type: account.type,

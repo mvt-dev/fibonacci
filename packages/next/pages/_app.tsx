@@ -2,7 +2,6 @@ import React from 'react';
 import Head from 'next/head';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { useRouter } from 'next/router';
 import { wrapper } from '../store';
 
 const theme = createMuiTheme({
@@ -10,7 +9,6 @@ const theme = createMuiTheme({
 });
 
 const MyApp = ({ Component, pageProps }) => {
-  const router = useRouter();
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -18,7 +16,6 @@ const MyApp = ({ Component, pageProps }) => {
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
-    router.replace('/account');
   }, []);
 
   return (

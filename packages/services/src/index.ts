@@ -1,7 +1,7 @@
 import AccountController from './controllers/Account';
-import * as AccountInterface from './interfaces/Account';
+import CategoryController from './controllers/Category';
 
 export {
   AccountController,
-  AccountInterface,
+  CategoryController,
 };

@@ -1,4 +1,8 @@
-import { SNACKBAR_SHOW_SUCCESS, SNACKBAR_CLOSE } from '../actions/snackbar';
+import {
+  SNACKBAR_CLOSE,
+  SNACKBAR_SHOW_SUCCESS,
+  SNACKBAR_SHOW_ERROR
+} from '../actions/snackbar';
 
 const initialState = {
   open: false,
@@ -8,6 +12,8 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case SNACKBAR_CLOSE:
+      return initialState;
     case SNACKBAR_SHOW_SUCCESS:
       return {
         ...state,
@@ -15,8 +21,13 @@ const reducer = (state = initialState, action) => {
         type: 'success',
         message: action.payload
       };
-    case SNACKBAR_CLOSE:
-      return initialState;
+    case SNACKBAR_SHOW_ERROR:
+      return {
+        ...state,
+        open: true,
+        type: 'error',
+        message: action.payload
+      };
     default:
       return state;
   }

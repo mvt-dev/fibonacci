@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import AccountModel from './AccountModel';
 import MOCK_ACCOUNTS from '../../../mock/accounts.json';
-import { Account, ACCOUNT_TYPES } from '../../interfaces/Account';
+import { AccountInterface } from '@fibonacci/interfaces';
 
 describe('AccountModel', () => {
 
@@ -38,9 +38,9 @@ describe('AccountModel', () => {
   });
 
   test('Create', async () => {
-    const account:Account = {
+    const account: AccountInterface.Account = {
       name: 'Test',
-      type: ACCOUNT_TYPES.TRANSACTION,
+      type: AccountInterface.AccountType.Transaction,
     };
     const result = await accountModel.create(account);
     expect(result).toBeDefined();
@@ -50,10 +50,10 @@ describe('AccountModel', () => {
   });
 
   test('Update', async () => {
-    const account:Account = {
+    const account: AccountInterface.Account = {
       id: 1,
       name: 'Test',
-      type: ACCOUNT_TYPES.TRANSACTION,
+      type: AccountInterface.AccountType.Transaction,
     };
     const result = await accountModel.update(account);
     expect(result).toBeDefined();

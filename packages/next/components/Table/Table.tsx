@@ -10,6 +10,8 @@ import {
   TextField,
   InputAdornment,
   Box,
+  LinearProgress,
+  Typography,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from './Table.style';
@@ -21,10 +23,12 @@ interface TableProps {
     cell?: (row: any) => {};
   }[];
   data: any[];
+  loading?: boolean;
+  error?: any;
 };
 
 const Table = (props: React.PropsWithChildren<TableProps>): React.ReactElement => {
-  const { children, columns, data } = props;
+  const { children, columns, data, loading, error } = props;
   const [search, setSearch] = useState<string>('');
   const classes = useStyles();
 
@@ -49,30 +53,42 @@ const Table = (props: React.PropsWithChildren<TableProps>): React.ReactElement =
         />
         {children}
       </Box>
-      <TableContainer component={Paper}>
-        <TableMaterial>
-          <TableHead>
-            <TableRow>
-              {columns.map(column => (
-                <TableCell key={`column-${column.name}`}>{column.header}</TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-            .filter(x => Object.keys(x).some(key => String(x[key]).toUpperCase().includes(search.toUpperCase())))
-            .map((row, index) => (
-              <TableRow key={`row-${index}`}>
-                {columns.map(({ header, name, cell, ...rest }) => (
-                  <TableCell key={`row-${name}-${index}`} {...rest}>
-                    {cell ? cell(row) : row[name]}
-                  </TableCell>
+      {loading ? (
+        <LinearProgress />
+      ) : error ? (
+          <Paper variant="outlined">
+            <Box p={3}>
+              <Typography variant="h6" color="primary">Erro ao obter dados do servidor</Typography>
+              <Typography variant="body2" color="textSecondary">Por favor tente novamente recarregando a página</Typography>
+            </Box>
+          </Paper>
+        ) : (
+          <TableContainer component={Paper}>
+            <TableMaterial>
+              <TableHead>
+                <TableRow>
+                  {columns.map(column => (
+                    <TableCell key={`column-${column.name}`}>{column.header}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data
+                .filter(x => Object.keys(x).some(key => String(x[key]).toUpperCase().includes(search.toUpperCase())))
+                .map((row, index) => (
+                  <TableRow key={`row-${index}`}>
+                    {columns.map(({ header, name, cell, ...rest }) => (
+                      <TableCell key={`row-${name}-${index}`} {...rest}>
+                        {cell ? cell(row) : row[name]}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                 ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </TableMaterial>
-      </TableContainer>
+              </TableBody>
+            </TableMaterial>
+          </TableContainer>
+        )
+      }
     </section>
   );
 };

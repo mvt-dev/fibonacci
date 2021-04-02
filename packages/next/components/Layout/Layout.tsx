@@ -1,4 +1,5 @@
 import React from 'react';
+import NextLink from 'next/link';
 import {
   Container,
   List,
@@ -18,9 +19,16 @@ const Layout = (props: React.PropsWithChildren<any>): React.ReactElement => {
       <Snackbar />
       <nav>
         <List className={classes.listBox}>
-          <ListItem button>
-            <ListItemText primary="Contas" />
-          </ListItem>
+          <NextLink href="/account">
+            <ListItem button>
+              <ListItemText primary="Contas" />
+            </ListItem>
+          </NextLink>
+          <NextLink href="/category">
+            <ListItem button>
+              <ListItemText primary="Categorias" />
+            </ListItem>
+          </NextLink>
         </List>
       </nav>
       <main className={classes.container}>

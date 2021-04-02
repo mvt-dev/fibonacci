@@ -1,4 +1,4 @@
-import { Account } from '../../interfaces/Account';
+import { AccountInterface } from '@fibonacci/interfaces';
 import AccountModel from '../../models/Account';
 
 /**
@@ -12,19 +12,19 @@ export default class AccountController {
     this.accountModel = new AccountModel();
   }
 
-  async list(): Promise<Account[]> {
+  async list(): Promise<AccountInterface.Account[]> {
     return this.accountModel.list();
   }
 
-  async get(id: number): Promise<Account> {
+  async get(id: number): Promise<AccountInterface.Account> {
     return this.accountModel.get(id);
   }
 
-  async create(account: Account): Promise<Account> {
+  async create(account: AccountInterface.Account): Promise<AccountInterface.Account> {
     return this.accountModel.create(account);
   }
 
-  async update(account: Account): Promise<Account> {
+  async update(account: AccountInterface.Account): Promise<AccountInterface.Account> {
     return this.accountModel.update(account);
   }
 
