@@ -1,0 +1,14 @@
+{
+  "name": "fibonacci",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "docker": "docker-compose build && docker-compose up",
+    "next": "yarn workspace @fibonacci/next"
+  },
+  "workspaces": ["packages/*"],
+  "dependencies": {
+    "knex": "^0.95.2"
+  }
+}

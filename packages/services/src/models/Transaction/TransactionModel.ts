@@ -1,0 +1,83 @@
+import DbModel from '../Db';
+import { TransactionInterface } from '@fibonacci/interfaces';
+
+/**
+* Transaction model
+*/
+export default class TransactionModel extends DbModel {
+
+  private table: string;
+  private tableAccount: string;
+  private tableCategory: string;
+
+  constructor (table = 'ledger', tableAccount = 'account', tableCategory = 'category') {
+    super({});
+    this.table = table;
+    this.tableAccount = tableAccount;
+    this.tableCategory = tableCategory;
+  }
+
+  async list(from: string, to: string): Promise<TransactionInterface.Transaction[]> {
+    return this.db(this.table)
+      .leftJoin(this.tableAccount, `${this.tableAccount}.id`, `${this.table}.account`)
+      .leftJoin(this.tableCategory, `${this.tableCategory}.id`, `${this.table}.category`)
+      .select(
+        `${this.table}.*`,
+        this.db.raw(`row_to_json("${this.tableAccount}".*) AS "${this.tableAccount}"`),
+        this.db.raw(`row_to_json("${this.tableCategory}".*) AS "${this.tableCategory}"`),
+      )
+      .whereBetween(`${this.table}.date`, [from, to])
+      .orderBy(`${this.table}.date`, 'desc');
+  }
+
+  async get(id: number): Promise<TransactionInterface.Transaction> {
+    return this.db(this.table)
+      .where(`${this.table}.id`, id)
+      .first();
+  }
+
+  async create(transaction: TransactionInterface.Transaction): Promise<TransactionInterface.Transaction> {
+    const result = await this.db(this.table).insert({
+      date: transaction.date,
+      account: transaction.account,
+      category: transaction.category,
+      description: transaction.description,
+      amount: transaction.amount,
+      value: transaction.value
+    }).returning([
+      'id',
+      'date',
+      'account',
+      'category',
+      'description',
+      'amount',
+      'value',
+    ]);
+    return result[0];
+  }
+
+  async update(transaction: TransactionInterface.Transaction): Promise<TransactionInterface.Transaction> {
+    const result = await this.db(this.table).where('id', transaction.id).update({
+      date: transaction.date,
+      account: transaction.account,
+      category: transaction.category,
+      description: transaction.description,
+      amount: transaction.amount,
+      value: transaction.value
+    }).returning([
+      'id',
+      'date',
+      'account',
+      'category',
+      'description',
+      'amount',
+      'value',
+    ]);
+    return result[0];
+  }
+
+  async remove(id: number): Promise<void> {
+    return this.db(this.table).where('id', id).del();
+  }
+
+}
