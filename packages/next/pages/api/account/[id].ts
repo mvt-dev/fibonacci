@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import { validation, isValid } from '../../../libs/validation';
 import { AccountController } from '@fibonacci/services';
 import { AccountInterface } from '@fibonacci/interfaces';
 import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
@@ -17,11 +17,11 @@ const list = async (_req, res) => {
 
 const get = async (req, res) => {
   try {
-    const {error, value} = Joi.object().keys({
-      id: Joi.number().integer().required(),
-    }).validate(req.query);
+    const { error, id } = isValid(req.query, {
+      id: validation.number().integer().required(),
+    });
     if (error) return middlewareValidationError(error, res);
-    const accounts = await accountControler.get(value.id);
+    const accounts = await accountControler.get(id);
     res.status(200).json(accounts);
   } catch (error) {
     middlewareDefaultError(error, res);
@@ -30,14 +30,16 @@ const get = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const {error, value} = Joi.object().keys({
-      name: Joi.string().required(),
-      type: Joi.string().valid(...Object.values(AccountInterface.AccountType)).required(),
-    }).validate(req.body);
+    const { error, name, type, currency } = isValid(req.body, {
+      name: validation.string().required(),
+      type: validation.string().valid(...Object.values(AccountInterface.AccountType)).required(),
+      currency: validation.string().valid(...Object.values(AccountInterface.AccountCurrency)).required(),
+    });
     if (error) return middlewareValidationError(error, res);
     const account = await accountControler.create({
-      name: value.name,
-      type: value.type,
+      name,
+      type,
+      currency,
     });
     res.status(201).json(account);
   } catch (error) {
@@ -47,16 +49,18 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const {error, value} = Joi.object().keys({
-      id: Joi.number().integer(),
-      name: Joi.string().required(),
-      type: Joi.string().valid(...Object.values(AccountInterface.AccountType)).required(),
-    }).validate({...req.body, ...req.query});
+    const { error, id, name, type, currency } = isValid({ ...req.query, ...req.body }, {
+      id: validation.number().integer().required(),
+      name: validation.string().required(),
+      type: validation.string().valid(...Object.values(AccountInterface.AccountType)).required(),
+      currency: validation.string().valid(...Object.values(AccountInterface.AccountCurrency)).required(),
+    });
     if (error) return middlewareValidationError(error, res);
     const account = await accountControler.update({
-      id: value.id,
-      name: value.name,
-      type: value.type,
+      id,
+      name,
+      type,
+      currency,
     });
     res.status(201).json(account);
   } catch (error) {
@@ -66,12 +70,12 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const {error, value} = Joi.object().keys({
-      id: Joi.number().integer().required(),
-    }).validate(req.query);
+    const { error, id } = isValid(req.query, {
+      id: validation.number().integer().required(),
+    });
     if (error) return middlewareValidationError(error, res);
-    await accountControler.remove(value.id);
-    res.status(201).json({id: value.id});
+    await accountControler.remove(id);
+    res.status(201).json({ id });
   } catch (error) {
     middlewareDefaultError(error, res);
   }

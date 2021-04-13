@@ -13,42 +13,13 @@ export const get = async (id: number | string) => {
   return data;
 }
 
-export const create = async ({
-  date,
-  account,
-  category,
-  description,
-  amount,
-  value,
-}: TransactionInterface.Transaction) => {
-  const { data } = await request.post(ENDPOINT, {
-    date,
-    account,
-    category,
-    description,
-    amount,
-    value,
-  });
+export const create = async (transaction: TransactionInterface.Transaction) => {
+  const { data } = await request.post(ENDPOINT, transaction);
   return data;
 }
 
-export const update = async ({
-  id,
-  date,
-  account,
-  category,
-  description,
-  amount,
-  value,
-}: TransactionInterface.Transaction) => {
-  const { data } = await request.patch(`${ENDPOINT}/${id}`, {
-    date,
-    account,
-    category,
-    description,
-    amount,
-    value,
-  });
+export const update = async ({ id, ...transaction }: TransactionInterface.Transaction) => {
+  const { data } = await request.patch(`${ENDPOINT}/${id}`, transaction);
   return data;
 }
 

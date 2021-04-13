@@ -15,6 +15,7 @@ import { get, create, update, remove } from '../../services/transactionService';
 import moment from 'moment';
 import { list as listAccounts } from '../../services/accountService';
 import { list as listCategories } from '../../services/categoryService';
+import { TransactionInterface } from '@fibonacci/interfaces';
 
 const Transaction = () => {
   const [showRemove, setShowRemove] = useState<boolean>(false);
@@ -104,10 +105,31 @@ const Transaction = () => {
         </Box>
         <Box mb={3}>
           <FieldSelect
+            name="type"
+            value={transaction?.type}
+            label="Tipo"
+            rules={{required: true}}
+            options={[
+              {value: TransactionInterface.TransactionType.Adjustment, label: 'Ajuste'},
+              {value: TransactionInterface.TransactionType.Buy, label: 'Compra'},
+              {value: TransactionInterface.TransactionType.Dividend, label: 'Dividendo'},
+              {value: TransactionInterface.TransactionType.Emolumento, label: 'Emolumento'},
+              {value: TransactionInterface.TransactionType.Fee, label: 'Taxa'},
+              {value: TransactionInterface.TransactionType.Investment, label: 'Aporte'},
+              {value: TransactionInterface.TransactionType.JCP, label: 'JCP'},
+              {value: TransactionInterface.TransactionType.Profit, label: 'Provento'},
+              {value: TransactionInterface.TransactionType.Rent, label: 'Aluguel'},
+              {value: TransactionInterface.TransactionType.Sell, label: 'Venda'},
+              {value: TransactionInterface.TransactionType.Whithdraw, label: 'Retirada'},
+            ]}
+          />
+        </Box>
+        <Box mb={3}>
+          <FieldSelect
             name="category"
             value={transaction?.category}
             label="Categoria"
-            rules={{required: true}}
+            // rules={{required: true}}
             options={categories ? categories.map(x => ({ value: x.id, label: x.name })) : []}
           />
         </Box>

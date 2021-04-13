@@ -25,10 +25,12 @@ export default class AccountModel extends DbModel {
     const result = await this.db(this.table).insert({
       name: account.name,
       type: account.type,
+      currency: account.currency,
     }).returning([
       'id',
       'name',
       'type',
+      'currency',
     ]);
     return result[0];
   }
@@ -37,10 +39,12 @@ export default class AccountModel extends DbModel {
     const result = await this.db(this.table).where('id', account.id).update({
       name: account.name,
       type: account.type,
+      currency: account.currency,
     }).returning([
       'id',
       'name',
       'type',
+      'currency',
     ]);
     return result[0];
   }

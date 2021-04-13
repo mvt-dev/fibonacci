@@ -13,18 +13,20 @@ export const get = async (id: number | string) => {
   return data;
 }
 
-export const create = async ({ name, type }: AccountInterface.Account) => {
+export const create = async ({ name, type, currency }: AccountInterface.Account) => {
   const { data } = await request.post(ENDPOINT, {
     name,
     type,
+    currency,
   });
   return data;
 }
 
-export const update = async ({ id, name, type }: AccountInterface.Account) => {
+export const update = async ({ id, name, type, currency }: AccountInterface.Account) => {
   const { data } = await request.patch(`${ENDPOINT}/${id}`, {
     name,
     type,
+    currency,
   });
   return data;
 }

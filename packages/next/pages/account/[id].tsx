@@ -86,6 +86,18 @@ const Account = () => {
             ]}
           />
         </Box>
+        <Box mb={3}>
+          <FieldSelect
+            name="currency"
+            value={account?.currency || 'BRL'}
+            label="Moeda"
+            rules={{required: true}}
+            options={[
+              {value: AccountInterface.AccountCurrency.BRL, label: 'R$ (BRL)'},
+              {value: AccountInterface.AccountCurrency.USD, label: '$ (USD)'},
+            ]}
+          />
+        </Box>
         <Box display="flex" justifyContent="space-between">
           <Box>
             <Button type="submit" variant="contained" color="primary">Confirmar</Button>

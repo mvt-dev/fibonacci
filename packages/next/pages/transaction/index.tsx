@@ -11,6 +11,8 @@ import Form from '../../components/Form';
 import { FieldDate } from '../../components/Field';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
+import numeric from '../../libs/numeric';
+import { TransactionInterface } from '@fibonacci/interfaces';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
@@ -34,9 +36,24 @@ const Transactions = () => {
       cell: (row) => moment.utc(row.date).format('DD/MM')
     },
     {
-      name: 'category',
-      header: 'Categoria',
-      cell: (row) => <div style={{ color: row.category.color }}>{row.category.name}</div>
+      name: 'type',
+      header: 'Tipo',
+      cell: (row) => {
+        switch (row.type) {
+          case TransactionInterface.TransactionType.Adjustment: return 'Ajuste';
+          case TransactionInterface.TransactionType.Buy: return 'Compra';
+          case TransactionInterface.TransactionType.Dividend: return 'Dividendo';
+          case TransactionInterface.TransactionType.Emolumento: return 'Emolumento';
+          case TransactionInterface.TransactionType.Fee: return 'Taxa';
+          case TransactionInterface.TransactionType.Investment: return 'Aporte';
+          case TransactionInterface.TransactionType.JCP: return 'JCP';
+          case TransactionInterface.TransactionType.Profit: return 'Provento';
+          case TransactionInterface.TransactionType.Rent: return 'Aluguel';
+          case TransactionInterface.TransactionType.Sell: return 'Venda';
+          case TransactionInterface.TransactionType.Whithdraw: return 'Retirada';
+          default: return '-';
+        }
+      }
     },
     {
       name: 'description',
@@ -45,7 +62,7 @@ const Transactions = () => {
     {
       name: 'value',
       header: 'Valor',
-      cell: (row) => <Typography variant="body2" color={row.value < 0 ? 'secondary' : 'primary'}>{row.value}</Typography>,
+      cell: (row) => <Typography variant="body2" color={row.value < 0 ? 'secondary' : 'primary'}>{numeric.currency(row.value)}</Typography>,
       align: 'right'
     },
     {

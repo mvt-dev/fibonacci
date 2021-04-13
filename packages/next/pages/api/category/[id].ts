@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import { validation, isValid } from '../../../libs/validation';
 import { CategoryController } from '@fibonacci/services';
 import { CategoryInterface } from '@fibonacci/interfaces';
 import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
@@ -17,11 +17,11 @@ const list = async (_req, res) => {
 
 const get = async (req, res) => {
   try {
-    const {error, value} = Joi.object().keys({
-      id: Joi.number().integer().required(),
-    }).validate(req.query);
+    const { error, id } = isValid(req.query, {
+      id: validation.number().integer().required(),
+    });
     if (error) return middlewareValidationError(error, res);
-    const accounts = await categoryControler.get(value.id);
+    const accounts = await categoryControler.get(id);
     res.status(200).json(accounts);
   } catch (error) {
     middlewareDefaultError(error, res);
@@ -30,16 +30,16 @@ const get = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const {error, value} = Joi.object().keys({
-      name: Joi.string().required(),
-      color: Joi.string().required(),
-      tag: Joi.string().valid(...Object.values(CategoryInterface.CategoryTag)).required(),
-    }).validate(req.body);
+    const { error, name, color, tag } = isValid(req.body, {
+      name: validation.string().required(),
+      color: validation.string().required(),
+      tag: validation.string().valid(...Object.values(CategoryInterface.CategoryTag)).required(),
+    });
     if (error) return middlewareValidationError(error, res);
     const account = await categoryControler.create({
-      name: value.name,
-      color: value.color,
-      tag: value.tag,
+      name,
+      color,
+      tag,
     });
     res.status(201).json(account);
   } catch (error) {
@@ -49,18 +49,18 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const {error, value} = Joi.object().keys({
-      id: Joi.number().integer(),
-      name: Joi.string().required(),
-      color: Joi.string().required(),
-      tag: Joi.string().valid(...Object.values(CategoryInterface.CategoryTag)).required(),
-    }).validate({...req.body, ...req.query});
+    const { error, id, name, color, tag } = isValid({ ...req.query, ...req.body }, {
+      id: validation.number().integer(),
+      name: validation.string().required(),
+      color: validation.string().required(),
+      tag: validation.string().valid(...Object.values(CategoryInterface.CategoryTag)).required(),
+    });
     if (error) return middlewareValidationError(error, res);
     const account = await categoryControler.update({
-      id: value.id,
-      name: value.name,
-      color: value.color,
-      tag: value.tag,
+      id,
+      name,
+      color,
+      tag,
     });
     res.status(201).json(account);
   } catch (error) {
@@ -70,12 +70,12 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    const {error, value} = Joi.object().keys({
-      id: Joi.number().integer().required(),
-    }).validate(req.query);
+    const { error, id } = isValid(req.query, {
+      id: validation.number().integer().required(),
+    });
     if (error) return middlewareValidationError(error, res);
-    await categoryControler.remove(value.id);
-    res.status(201).json({id: value.id});
+    await categoryControler.remove(id);
+    res.status(201).json({ id });
   } catch (error) {
     middlewareDefaultError(error, res);
   }

@@ -34,10 +34,11 @@ const get = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { error, date, account, category, description, amount, value } = isValid(req.body, {
+    const { error, date, account, type, category, description, amount, value } = isValid(req.body, {
       date: validation.string().required(),
       account: validation.number().integer().required(),
-      category: validation.number().integer().required(),
+      type: validation.string().required(),
+      category: validation.number().integer().empty(''),
       description: validation.string().required(),
       amount: validation.number().required(),
       value: validation.number().required(),
@@ -46,6 +47,7 @@ const create = async (req, res) => {
     const transaction = await controller.create({
       date,
       account,
+      type,
       category,
       description,
       amount,
@@ -59,11 +61,12 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const { error, id, date, account, category, description, amount, value } = isValid({ ...req.query, ...req.body }, {
+    const { error, id, date, account, type, category, description, amount, value } = isValid({ ...req.query, ...req.body }, {
       id: validation.number().integer().required(),
       date: validation.string().required(),
       account: validation.number().integer().required(),
-      category: validation.number().integer().required(),
+      type: validation.string().required(),
+      category: validation.number().integer().empty(''),
       description: validation.string().required(),
       amount: validation.number().required(),
       value: validation.number().required(),
@@ -73,6 +76,7 @@ const update = async (req, res) => {
       id,
       date,
       account,
+      type,
       category,
       description,
       amount,

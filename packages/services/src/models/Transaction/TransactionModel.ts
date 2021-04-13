@@ -40,6 +40,7 @@ export default class TransactionModel extends DbModel {
     const result = await this.db(this.table).insert({
       date: transaction.date,
       account: transaction.account,
+      type: transaction.type,
       category: transaction.category,
       description: transaction.description,
       amount: transaction.amount,
@@ -48,6 +49,7 @@ export default class TransactionModel extends DbModel {
       'id',
       'date',
       'account',
+      'type',
       'category',
       'description',
       'amount',
@@ -60,6 +62,7 @@ export default class TransactionModel extends DbModel {
     const result = await this.db(this.table).where('id', transaction.id).update({
       date: transaction.date,
       account: transaction.account,
+      type: transaction.type,
       category: transaction.category,
       description: transaction.description,
       amount: transaction.amount,
@@ -68,6 +71,7 @@ export default class TransactionModel extends DbModel {
       'id',
       'date',
       'account',
+      'type',
       'category',
       'description',
       'amount',
