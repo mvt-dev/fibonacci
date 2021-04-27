@@ -121,6 +121,9 @@ const Transaction = () => {
               {value: TransactionInterface.TransactionType.Rent, label: 'Aluguel'},
               {value: TransactionInterface.TransactionType.Sell, label: 'Venda'},
               {value: TransactionInterface.TransactionType.Whithdraw, label: 'Retirada'},
+              {value: TransactionInterface.TransactionType.Gain, label: 'Ganho'},
+              {value: TransactionInterface.TransactionType.Cost, label: 'Despesa'},
+              {value: TransactionInterface.TransactionType.VirtualCost, label: 'Despesa (virtual)'},
             ]}
           />
         </Box>

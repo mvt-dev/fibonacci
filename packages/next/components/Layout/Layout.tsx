@@ -39,6 +39,11 @@ const Layout = (props: React.PropsWithChildren<any>): React.ReactElement => {
               <ListItemText primary="Investimentos" />
             </ListItem>
           </NextLink>
+          <NextLink href="/expenses">
+            <ListItem button>
+              <ListItemText primary="Gastos" />
+            </ListItem>
+          </NextLink>
         </List>
       </nav>
       <main className={classes.container}>

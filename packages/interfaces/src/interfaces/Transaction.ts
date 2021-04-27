@@ -10,6 +10,9 @@ export enum TransactionType {
   Emolumento = 'EMOLUMENTO',
   Rent = 'RENT',
   Adjustment = 'ADJUSTMENT',
+  Gain = 'GAIN',
+  Cost = 'COST',
+  VirtualCost = 'VIRTUAL_COST'
 }
 
 export interface Transaction {
