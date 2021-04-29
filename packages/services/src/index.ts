@@ -3,6 +3,7 @@ import CategoryController from './controllers/Category';
 import TransactionController from './controllers/Transaction';
 import InvestmentController from './controllers/Investment';
 import ExpensesController from './controllers/Expenses';
+import BalanceController from './controllers/Balance';
 
 export {
   AccountController,
@@ -10,4 +11,5 @@ export {
   TransactionController,
   InvestmentController,
   ExpensesController,
+  BalanceController,
 };
