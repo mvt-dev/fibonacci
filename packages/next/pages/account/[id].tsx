@@ -13,6 +13,7 @@ import useService from '../../hooks/useService';
 import { snackbarShowSuccess, snackbarShowError } from '../../store/actions/snackbar';
 import DialogAlert from '../../components/DialogAlert';
 import { get, create, update, remove } from '../../services/accountService';
+import { fetchAccounts } from '../../store/actions/accounts';
 
 const Account = () => {
   const [showRemove, setShowRemove] = useState<boolean>(false);
@@ -30,6 +31,7 @@ const Account = () => {
         await create(formData);
         dispatch(snackbarShowSuccess('Conta criada com sucesso'));
       }
+      dispatch(fetchAccounts({ force: true }));
       router.back();
     } catch (error) {
       dispatch(snackbarShowError(error?.response?.data?.message || 'Erro interno! Por favor tente novamente.'));

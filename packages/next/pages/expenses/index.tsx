@@ -1,27 +1,46 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import { Typography, Box, Breadcrumbs } from '@material-ui/core';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
-import useService from '../../hooks/useService';
-import { list } from '../../services/expensesService';
 import numeric from '../../libs/numeric';
+import { fetchExpenses } from '../../store/actions/expenses';
+import moment from 'moment';
 
 const Expenses = () => {
-  const { data: expenses, loading, error } = useService(list);
+  const dispatch = useDispatch();
+  dispatch(fetchExpenses());
+  const { records: expenses, status, error } = useSelector((state: any) => state.expenses);
 
   const columns = [
     {
-      name: 'name',
+      name: 'category',
       header: 'Categoria'
     },
     {
-      name: 'value',
-      header: 'Total',
+      name: 'm2',
+      header: moment().subtract(2, 'month').format('MMM'),
       align: 'right',
-      cell: row => `R$ ${numeric.currency(row.value * -1)}`,
-      total: () => `R$ ${numeric.currency(expenses.reduce((acc, cur) => acc += cur.value * -1, 0))}`,
-      sort: (order, a, b) => order === 'asc' ? a.value - b.value : b.value - a.value
+      cell: row => `R$ ${numeric.currency(Math.abs(row.m2))}`,
+      total: () => `R$ ${numeric.currency(expenses.reduce((acc, cur) => acc += Math.abs(cur.m2), 0))}`,
+      sort: (order, a, b) => order === 'asc' ? a.m2 - b.m2 : b.m2 - a.m2
+    },
+    {
+      name: 'm1',
+      header: moment().subtract(1, 'month').format('MMM'),
+      align: 'right',
+      cell: row => `R$ ${numeric.currency(Math.abs(row.m1))}`,
+      total: () => `R$ ${numeric.currency(expenses.reduce((acc, cur) => acc += Math.abs(cur.m1), 0))}`,
+      sort: (order, a, b) => order === 'asc' ? a.m1 - b.m1 : b.m1 - a.m1
+    },
+    {
+      name: 'm0',
+      header: moment().format('MMM'),
+      align: 'right',
+      cell: row => `R$ ${numeric.currency(Math.abs(row.m0))}`,
+      total: () => `R$ ${numeric.currency(expenses.reduce((acc, cur) => acc += Math.abs(cur.m0), 0))}`,
+      sort: (order, a, b) => order === 'asc' ? a.m0 - b.m0 : b.m0 - a.m0
     }
   ];
 
@@ -35,7 +54,7 @@ const Expenses = () => {
           <Typography color="primary">Gastos</Typography>
         </Breadcrumbs>
       </Box>
-      <Table columns={columns} data={expenses} loading={loading} error={error} showSearch={false} showTotal={true} />
+      <Table columns={columns} data={expenses} loading={status === 'loading'} error={error} showSearch={false} showTotal={true} />
     </Layout>
   );
 };

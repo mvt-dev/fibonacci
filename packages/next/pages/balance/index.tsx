@@ -1,14 +1,16 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import { Typography, Box, Breadcrumbs } from '@material-ui/core';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
-import useService from '../../hooks/useService';
-import { list } from '../../services/balanceService';
 import numeric from '../../libs/numeric';
+import { fetchBalance } from '../../store/actions/balance';
 
 const Balance = () => {
-  const { data: balance, loading, error } = useService(list);
+  const dispatch = useDispatch();
+  dispatch(fetchBalance());
+  const { records: balance, status, error } = useSelector((state: any) => state.balance);
 
   const columns = [
     {
@@ -69,7 +71,7 @@ const Balance = () => {
           <Typography color="primary">Balanço</Typography>
         </Breadcrumbs>
       </Box>
-      <Table columns={columns} data={balance} loading={loading} error={error} showSearch={false} />
+      <Table columns={columns} data={balance} loading={status === 'loading'} error={error} showSearch={false} />
     </Layout>
   );
 };

@@ -1,6 +1,6 @@
 import moment from 'moment';
 import DbModel from '../Db';
-import { ExpensesInterface, TransactionInterface } from '@fibonacci/interfaces';
+import { ExpensesInterface, TransactionInterface, CategoryInterface } from '@fibonacci/interfaces';
 
 /**
 * Expenses model
@@ -8,25 +8,25 @@ import { ExpensesInterface, TransactionInterface } from '@fibonacci/interfaces';
 export default class ExpensesModel extends DbModel {
 
   private table: string;
-  private tableCategory: string;
+  private tableLedger: string;
 
-  constructor (table = 'ledger', tableCategory = 'category') {
+  constructor (table = 'category', tableLedger = 'ledger') {
     super({});
     this.table = table;
-    this.tableCategory = tableCategory;
+    this.tableLedger = tableLedger;
   }
 
-  async list(): Promise<ExpensesInterface.Expenses[]> {
+  async list(dateFrom: string, dateTo: string): Promise<ExpensesInterface.Expenses[]> {
     return this.db(this.table)
-      .leftJoin(this.tableCategory, `${this.tableCategory}.id`, `${this.table}.category`)
       .select(
-        `${this.tableCategory}.name`,
-        this.db.raw(`SUM(${this.table}.value) AS value`)
+        `${this.table}.name AS category`,
+        this.db(this.tableLedger).sum(`${this.tableLedger}.value`)
+          .where(`${this.tableLedger}.category`, this.db.ref(`${this.table}.id`))
+          .where(`${this.tableLedger}.type`, TransactionInterface.TransactionType.Cost)
+          .whereBetween(`${this.tableLedger}.date`, [dateFrom, dateTo])
+          .as('value')
       )
-      .where(`${this.table}.type`, TransactionInterface.TransactionType.Cost)
-      .where(`${this.table}.date`, '>=', moment().startOf('month').format('YYYY-MM-DD'))
-      .groupBy(`${this.tableCategory}.name`)
-      .orderBy('value');
+      .where(`${this.table}.tag`, CategoryInterface.CategoryTag.Debit);
   }
 
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import {Typography, IconButton, Box, Breadcrumbs} from '@material-ui/core';
@@ -7,11 +8,12 @@ import AddIcon from '@material-ui/icons/Add';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
 import { AccountInterface } from '@fibonacci/interfaces';
-import useService from '../../hooks/useService';
-import { list } from '../../services/accountService';
+import { fetchAccounts } from '../../store/actions/accounts';
 
 const Accounts = () => {
-  const {data: accounts, loading, error} = useService(list);
+  const dispatch = useDispatch();
+  dispatch(fetchAccounts());
+  const { records: accounts, status, error } = useSelector((state: any) => state.accounts);
 
   const columns = [
     {
@@ -52,7 +54,7 @@ const Accounts = () => {
           <Typography color="primary">Contas</Typography>
         </Breadcrumbs>
       </Box>
-      <Table columns={columns} data={accounts} loading={loading} error={error}>
+      <Table columns={columns} data={accounts} loading={status === 'loading'} error={error}>
         <NextLink href="/account/new">
           <IconButton color="primary"><AddIcon /></IconButton>
         </NextLink>

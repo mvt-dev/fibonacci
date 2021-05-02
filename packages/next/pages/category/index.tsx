@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { Typography, IconButton, Box, Breadcrumbs, Chip } from '@material-ui/core';
@@ -6,12 +7,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
-import useService from '../../hooks/useService';
-import { list } from '../../services/categoryService';
 import { CategoryInterface } from '@fibonacci/interfaces';
+import { fetchCategories } from '../../store/actions/categories';
 
 const Categories = () => {
-  const { data: categories, loading, error } = useService(list);
+  const dispatch = useDispatch();
+  dispatch(fetchCategories());
+  const { records: categories, status, error } = useSelector((state: any) => state.categories);
 
   const columns = [
     {
@@ -57,7 +59,7 @@ const Categories = () => {
           <Typography color="primary">Categorias</Typography>
         </Breadcrumbs>
       </Box>
-      <Table columns={columns} data={categories} loading={loading} error={error}>
+      <Table columns={columns} data={categories} loading={status === 'loading'} error={error}>
         <NextLink href="/category/new">
           <IconButton color="primary"><AddIcon /></IconButton>
         </NextLink>

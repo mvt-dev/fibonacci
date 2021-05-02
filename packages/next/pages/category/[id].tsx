@@ -13,6 +13,7 @@ import { snackbarShowSuccess, snackbarShowError } from '../../store/actions/snac
 import DialogAlert from '../../components/DialogAlert';
 import { get, create, update, remove } from '../../services/categoryService';
 import { CategoryInterface } from '@fibonacci/interfaces';
+import { fetchCategories } from '../../store/actions/categories';
 
 const Category = () => {
   const [showRemove, setShowRemove] = useState<boolean>(false);
@@ -30,6 +31,7 @@ const Category = () => {
         await create(formData);
         dispatch(snackbarShowSuccess('Categoria criada com sucesso'));
       }
+      dispatch(fetchCategories({ force: true }));
       router.back();
     } catch (error) {
       dispatch(snackbarShowError(error?.response?.data?.message || 'Erro interno! Por favor tente novamente.'));

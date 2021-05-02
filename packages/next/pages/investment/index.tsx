@@ -1,14 +1,16 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import { Typography, Box, Breadcrumbs, Chip } from '@material-ui/core';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
-import useService from '../../hooks/useService';
-import { listCurrent } from '../../services/investmentService';
 import numeric from '../../libs/numeric';
+import { fetchInvestment } from '../../store/actions/investment';
 
 const Investments = () => {
-  const { data: investments, loading, error } = useService(listCurrent);
+  const dispatch = useDispatch();
+  dispatch(fetchInvestment());
+  const { records: investments, status, error } = useSelector((state: any) => state.investment);
 
   const columnsDefault = [
     {
@@ -92,10 +94,10 @@ const Investments = () => {
         </Breadcrumbs>
       </Box>
       <Box mt={1}>
-        <Table columns={columnsTypes} data={investments?.types || []} loading={loading} error={error} showSearch={false} showTotal={true} />
+        <Table columns={columnsTypes} data={investments?.types || []} loading={status === 'loading'} error={error} showSearch={false} showTotal={true} />
       </Box>
       <Box mt={2}>
-        <Table columns={columnsAssets} data={investments?.assets || []} loading={loading} error={error} />
+        <Table columns={columnsAssets} data={investments?.assets || []} loading={status === 'loading'} error={error} />
       </Box>
     </Layout>
   );

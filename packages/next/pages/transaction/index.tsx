@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { Typography, IconButton, Box, Breadcrumbs, Chip } from '@material-ui/core';
@@ -6,28 +7,28 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
-import { list } from '../../services/transactionService';
 import Form from '../../components/Form';
-import { FieldDate } from '../../components/Field';
+import { FieldDate, FieldSelect } from '../../components/Field';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
 import numeric from '../../libs/numeric';
 import { TransactionInterface } from '@fibonacci/interfaces';
+import { fetchTransactions, setAccount } from '../../store/actions/transactions';
+import { fetchAccounts } from '../../store/actions/accounts';
 
 const Transactions = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [days, setDays] = useState(null);
 
-  const formMethods = useForm({
-    defaultValues: {
-      'date-from': moment().startOf('month'),
-      'date-to': moment(),
-    }
-  });
-  const dateFrom = formMethods.watch('date-from');
-  const dateTo = formMethods.watch('date-to');
+  const { records: transactions, status, error, dateFrom, dateTo, account } = useSelector((state: any) => state.transactions);
+  const { records: accounts } = useSelector((state: any) => state.accounts);
+
+  const dispatch = useDispatch();
+  dispatch(fetchAccounts());
+
+  const formMethods = useForm();
+  const dateFromWatch = formMethods.watch('date-from');
+  const dateToWatch = formMethods.watch('date-to');
+  const accountWatch = formMethods.watch('account');
 
   const columns = [
     {
@@ -77,22 +78,16 @@ const Transactions = () => {
     },
   ];
 
-  // useEffect(() => {
-  //   formMethods.setValue('date-from', moment().startOf('month'));
-  //   formMethods.setValue('date-to', moment());
-  // }, []);
+  useEffect(() => {
+    if (dateFromWatch && dateToWatch) {
+      setDays(dateToWatch.diff(dateFromWatch, 'days'));
+      dispatch(fetchTransactions({ dateFrom: dateFromWatch, dateTo: dateToWatch }));
+    }
+  }, [dateFromWatch, dateToWatch]);
 
   useEffect(() => {
-    if (dateFrom && dateTo) {
-      setDays(dateTo.diff(dateFrom, 'days'));
-      setLoading(true);
-      setError(null);
-      list(dateFrom.format('YYYY-MM-DD'), dateTo.format('YYYY-MM-DD'))
-        .then(data => setTransactions(data))
-        .catch(error => setError(error))
-        .finally(() => setLoading(false));
-    }
-  }, [dateFrom, dateTo]);
+    dispatch(setAccount(accountWatch));
+  }, [accountWatch])
 
   const setDate = (days: number) => {
     formMethods.setValue('date-from', moment().subtract(days, 'days'));
@@ -115,7 +110,7 @@ const Transactions = () => {
             <Box>
               <FieldDate
                 name="date-from"
-                value={null}
+                value={dateFrom}
                 label="Data Inicial"
                 rules={{required: true}}
               />
@@ -123,9 +118,21 @@ const Transactions = () => {
             <Box ml={2}>
               <FieldDate
                 name="date-to"
-                value={null}
+                value={dateTo}
                 label="Data Final"
                 rules={{required: true}}
+              />
+            </Box>
+            <Box ml={2} style={{ width: 200 }}>
+              <FieldSelect
+                name="account"
+                value={account}
+                label="Conta"
+                rules={{required: true}}
+                options={[
+                  { value: 'all', label: 'Todas' },
+                  ...accounts.map(x => ({ value: x.id, label: x.name }))
+                ]}
               />
             </Box>
           </Box>
@@ -142,7 +149,12 @@ const Transactions = () => {
           </Box>
         </Box>
       </Form>
-      <Table columns={columns} data={transactions} loading={loading} error={error}>
+      <Table 
+        columns={columns}
+        data={transactions.filter(x => account !== 'all' ? x.account.id === account : true)}
+        loading={status === 'loading'}
+        error={error}
+      >
         <NextLink href="/transaction/new">
           <IconButton color="primary"><AddIcon /></IconButton>
         </NextLink>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import {useRouter} from 'next/router'
-import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router'
+import { useDispatch, useSelector } from 'react-redux';
 import { Typography, Box, Breadcrumbs, Button, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../../components/Layout';
@@ -13,18 +13,23 @@ import { snackbarShowSuccess, snackbarShowError } from '../../store/actions/snac
 import DialogAlert from '../../components/DialogAlert';
 import { get, create, update, remove } from '../../services/transactionService';
 import moment from 'moment';
-import { list as listAccounts } from '../../services/accountService';
-import { list as listCategories } from '../../services/categoryService';
 import { TransactionInterface } from '@fibonacci/interfaces';
+import { fetchTransactions } from '../../store/actions/transactions';
+import { fetchAccounts } from '../../store/actions/accounts';
+import { fetchCategories } from '../../store/actions/categories';
 
 const Transaction = () => {
   const [showRemove, setShowRemove] = useState<boolean>(false);
-  const router = useRouter();
+  const { records: accounts } = useSelector((state: any) => state.accounts);
+  const { records: categories } = useSelector((state: any) => state.categories);
+  
   const dispatch = useDispatch();
+  dispatch(fetchAccounts());
+  dispatch(fetchCategories());
+
+  const router = useRouter();
   const { id } = router.query;
   const {data: transaction, loading} = id !== 'new' ? useService(get, id) : { data: null, loading: false };
-  const {data: accounts} = useService(listAccounts);
-  const {data: categories} = useService(listCategories);
 
   const onSubmit = async (formData) => {
     try {
@@ -35,6 +40,7 @@ const Transaction = () => {
         await create(formData);
         dispatch(snackbarShowSuccess('Transação criada com sucesso'));
       }
+      dispatch(fetchTransactions({ force: true }));
       router.back();
     } catch (error) {
       dispatch(snackbarShowError(error?.response?.data?.message || 'Erro interno! Por favor tente novamente.'));
