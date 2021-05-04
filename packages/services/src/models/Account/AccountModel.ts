@@ -7,14 +7,21 @@ import { AccountInterface } from '@fibonacci/interfaces';
 export default class AccountModel extends DbModel {
 
   private table: string;
+  private tableLedger: string;
 
-  constructor (table = 'account') {
+  constructor (table = 'account', tableLedger = 'ledger') {
     super({});
     this.table = table;
+    this.tableLedger = tableLedger;
   }
 
   async list(): Promise<AccountInterface.Account[]> {
-    return this.db(this.table).orderBy('name');
+    return this.db(this.table)
+      .select(
+        '*',
+        this.db(this.tableLedger).sum(this.db.raw(`${this.tableLedger}.amount * ${this.tableLedger}.value`)).where(`${this.tableLedger}.account`, this.db.ref(`${this.table}.id`)).as('balance')
+      )
+      .orderBy('name');
   }
 
   async get(id: number): Promise<AccountInterface.Account> {

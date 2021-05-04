@@ -14,4 +14,5 @@ export interface Account {
   name: string;
   type: AccountType;
   currency: AccountCurrency;
+  balance?: number;
 };

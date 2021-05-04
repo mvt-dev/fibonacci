@@ -9,6 +9,7 @@ import Layout from '../../components/Layout';
 import Table from '../../components/Table';
 import { AccountInterface } from '@fibonacci/interfaces';
 import { fetchAccounts } from '../../store/actions/accounts';
+import numeric from '../../libs/numeric';
 
 const Accounts = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,12 @@ const Accounts = () => {
           default: return '-';
         }
       }
+    },
+    {
+      name: 'balance',
+      header: 'Saldo',
+      cell: (row) => <Typography variant="body2" color={row.balance < 0 ? 'secondary' : 'primary'}>{numeric.currency(row.balance)}</Typography>,
+      align: 'right'
     },
     {
       name: 'action',
