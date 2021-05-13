@@ -33,24 +33,32 @@ export default class InvestmentController {
         investment.valorizationPercent = (investment.currentValue / investment.value - 1) * 100;
       } else {
         try {
-          if (investment.currency === 'BRL') {
-            const finance = await this.financeModel.getClosePrice(`${investment.asset}.SA`);
-            investment.closePrice = finance.closePrice;
-            investment.previousPrice = finance.previousPrice;
-            investment.variation = (finance.closePrice / finance.previousPrice - 1) * 100;
-            investment.valorizationPercent = (finance.previousPrice / investment.average - 1) * 100;
-            investment.valorization = (finance.closePrice - investment.average) * investment.amount;
-            investment.currentValue = investment.value + investment.valorization;
-          } else {
+          if (investment.currency === 'USD') {
             const finance = await this.financeModel.getClosePrice(investment.asset);
             investment.value = investment.value * currency.closePrice;
             investment.average = investment.average * currency.closePrice;
             investment.closePrice = finance.closePrice * currency.closePrice;
             investment.previousPrice = finance.previousPrice * currency.previousPrice;
             investment.variation = (investment.closePrice / investment.previousPrice - 1) * 100;
-            investment.valorizationPercent = (investment.previousPrice / investment.average - 1) * 100;
             investment.valorization = (investment.closePrice - investment.average) * investment.amount;
             investment.currentValue = investment.value + investment.valorization;
+            investment.valorizationPercent = (investment.currentValue / investment.value - 1) * 100;
+          } else if (investment.asset === 'BTC') {
+            const finance = await this.financeModel.getClosePrice('BTC-USD');
+            investment.closePrice = finance.closePrice * currency.closePrice;
+            investment.previousPrice = finance.previousPrice * currency.previousPrice;
+            investment.variation = (investment.closePrice / investment.previousPrice - 1) * 100;
+            investment.valorization = (investment.closePrice - investment.average) * investment.amount;
+            investment.currentValue = investment.value + investment.valorization;
+            investment.valorizationPercent = (investment.currentValue / investment.value - 1) * 100;
+          } else {
+            const finance = await this.financeModel.getClosePrice(`${investment.asset}.SA`);
+            investment.closePrice = finance.closePrice;
+            investment.previousPrice = finance.previousPrice;
+            investment.variation = (finance.closePrice / finance.previousPrice - 1) * 100;
+            investment.valorization = (finance.closePrice - investment.average) * investment.amount;
+            investment.currentValue = investment.value + investment.valorization;
+            investment.valorizationPercent = (investment.currentValue / investment.value - 1) * 100;
           }
         } catch (error) {
           investment.closePrice = null;
@@ -67,6 +75,8 @@ export default class InvestmentController {
     response.total.valorization = investments.reduce((acc, cur) => acc += cur.valorization || 0, 0);
     response.total.currentValue = response.total.value + response.total.valorization;
     response.total.valorizationPercent = (response.total.currentValue / response.total.value - 1) * 100;
+    const totalPreviousPrice = investments.reduce((acc, cur) => acc += cur.previousPrice ? cur.previousPrice * cur.amount : cur.currentValue || 0, 0);
+    response.total.variation = (response.total.currentValue / totalPreviousPrice - 1) * 100;
     response.assets = investments
       .map(x => ({
         ...x,
@@ -75,7 +85,7 @@ export default class InvestmentController {
       .sort((a, b) => (b.currentValue || 0) - (a.currentValue || 0));
     response.types = response.assets
       .reduce((acc: any, cur: any) => {
-        const { type, value, currentValue, valorization, valorizationPercent, variation, walletPercent } = cur;
+        const { type, value, currentValue, valorization, valorizationPercent, variation, walletPercent, amount, closePrice, previousPrice } = cur;
         const found = acc.find((x: any) => x.type === cur.type);
         if (found) {
           found.value += value;
@@ -84,6 +94,9 @@ export default class InvestmentController {
           found.valorizationPercent += valorizationPercent;
           found.walletPercent += walletPercent;
           found.currentValue += currentValue;
+          found.amount += amount;
+          found.closePrice += closePrice;
+          found.previousPrice += previousPrice;
         } else {
           acc.push({
             type,
@@ -93,14 +106,22 @@ export default class InvestmentController {
             valorizationPercent,
             walletPercent,
             currentValue,
+            amount,
+            closePrice,
+            previousPrice,
           });
         }
         return acc;
       }, [])
-      .map((x: any) => {
-        x.valorizationPercent = (x.currentValue / x.value - 1) * 100;
-        return x;
-      })
+      .map((x: any) => ({
+        type: x.type,
+        value: x.value,
+        valorization: x.valorization,
+        valorizationPercent: (x.currentValue / x.value - 1) * 100,
+        walletPercent: x.walletPercent,
+        currentValue: x.currentValue,
+        variation: ((x.closePrice * x.amount) / (x.previousPrice * x.amount) - 1) * 100,
+      }))
       .sort((a: any, b: any) => (b.currentValue || 0) - (a.currentValue || 0));
     return response;
   }

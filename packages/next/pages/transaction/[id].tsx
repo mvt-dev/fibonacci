@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux';
 import { Typography, Box, Breadcrumbs, Button, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,13 +13,22 @@ import { snackbarShowSuccess, snackbarShowError } from '../../store/actions/snac
 import DialogAlert from '../../components/DialogAlert';
 import { get, create, update, remove } from '../../services/transactionService';
 import moment from 'moment';
-import { TransactionInterface } from '@fibonacci/interfaces';
+import { TransactionInterface, AccountInterface } from '@fibonacci/interfaces';
 import { fetchTransactions } from '../../store/actions/transactions';
 import { fetchAccounts } from '../../store/actions/accounts';
 import { fetchCategories } from '../../store/actions/categories';
+import { fetchInvestment } from '../../store/actions/investment';
+import { fetchExpenses } from '../../store/actions/expenses';
+import { fetchBalance } from '../../store/actions/balance';
 
-const Transaction = () => {
+interface TransactionProps {
+  id: string;
+}
+
+const Transaction = (props: TransactionProps) => {
+  const { id } = props;
   const [showRemove, setShowRemove] = useState<boolean>(false);
+  const [accountType, setAccounType] = useState(null);
   const { records: accounts } = useSelector((state: any) => state.accounts);
   const { records: categories } = useSelector((state: any) => state.categories);
   
@@ -28,19 +37,54 @@ const Transaction = () => {
   dispatch(fetchCategories());
 
   const router = useRouter();
-  const { id } = router.query;
+
   const {data: transaction, loading} = id !== 'new' ? useService(get, id) : { data: null, loading: false };
+
+  const types = accountType === AccountInterface.AccountType.Investment ? [
+    {value: TransactionInterface.TransactionType.Buy, label: 'Compra'},
+    {value: TransactionInterface.TransactionType.Sell, label: 'Venda'},
+    {value: TransactionInterface.TransactionType.Investment, label: 'Aporte'},
+    {value: TransactionInterface.TransactionType.Whithdraw, label: 'Retirada'},
+    {value: TransactionInterface.TransactionType.Fee, label: 'Taxa'},
+    {value: TransactionInterface.TransactionType.Dividend, label: 'Dividendo'},
+    {value: TransactionInterface.TransactionType.Emolumento, label: 'Emolumento'},
+    {value: TransactionInterface.TransactionType.JCP, label: 'JCP'},
+    {value: TransactionInterface.TransactionType.Profit, label: 'Provento'},
+    {value: TransactionInterface.TransactionType.Rent, label: 'Aluguel'},
+    {value: TransactionInterface.TransactionType.Adjustment, label: 'Ajuste'},
+  ] : [
+    {value: TransactionInterface.TransactionType.Gain, label: 'Ganho'},
+    {value: TransactionInterface.TransactionType.Cost, label: 'Despesa'},
+    {value: TransactionInterface.TransactionType.VirtualCost, label: 'Investimento'},
+    {value: TransactionInterface.TransactionType.Adjustment, label: 'Ajuste'},
+  ];
+
+  const onChangeAccount = (value) => {
+    if (value) {
+      setAccounType(accounts?.find(x => x.id === value)?.type);
+    } else {
+      setAccounType(null);
+    }
+  }
 
   const onSubmit = async (formData) => {
     try {
+      const data = {
+        ...formData,
+        amount: formData?.amount || 1
+      }
       if (id !== 'new') {
-        await update({id, ...formData});
+        await update({id, ...data});
         dispatch(snackbarShowSuccess('Transação atualizada com sucesso'));
       } else {
-        await create(formData);
+        await create(data);
         dispatch(snackbarShowSuccess('Transação criada com sucesso'));
       }
       dispatch(fetchTransactions({ force: true }));
+      dispatch(fetchAccounts({ force: true }));
+      dispatch(fetchInvestment({ force: true }));
+      dispatch(fetchExpenses({ force: true }));
+      dispatch(fetchBalance({ force: true }));
       router.back();
     } catch (error) {
       dispatch(snackbarShowError(error?.response?.data?.message || 'Erro interno! Por favor tente novamente.'));
@@ -85,6 +129,36 @@ const Transaction = () => {
           />
         </Box>
         <Box mb={3}>
+          <FieldSelect
+            name="account"
+            value={transaction?.account}
+            label="Conta"
+            rules={{required: true}}
+            options={accounts ? accounts.map(x => ({ value: x.id, label: x.name })) : []}
+            onChange={onChangeAccount}
+          />
+        </Box>
+        <Box mb={3}>
+          <FieldSelect
+            name="type"
+            value={transaction?.type}
+            label="Tipo"
+            rules={{required: true}}
+            options={types}
+          />
+        </Box>
+        {accountType !== AccountInterface.AccountType.Investment && (
+          <Box mb={3}>
+            <FieldSelect
+              name="category"
+              value={transaction?.category}
+              label="Categoria"
+              // rules={{required: true}}
+              options={categories ? categories.map(x => ({ value: x.id, label: x.name })) : []}
+            />
+          </Box>
+        )}
+        <Box mb={3}>
           <FieldText
             name="description"
             value={transaction?.description}
@@ -100,56 +174,16 @@ const Transaction = () => {
             rules={{required: true}}
           />
         </Box>
-        <Box mb={3}>
-          <FieldSelect
-            name="account"
-            value={transaction?.account}
-            label="Conta"
-            rules={{required: true}}
-            options={accounts ? accounts.map(x => ({ value: x.id, label: x.name })) : []}
-          />
-        </Box>
-        <Box mb={3}>
-          <FieldSelect
-            name="type"
-            value={transaction?.type}
-            label="Tipo"
-            rules={{required: true}}
-            options={[
-              {value: TransactionInterface.TransactionType.Adjustment, label: 'Ajuste'},
-              {value: TransactionInterface.TransactionType.Buy, label: 'Compra'},
-              {value: TransactionInterface.TransactionType.Dividend, label: 'Dividendo'},
-              {value: TransactionInterface.TransactionType.Emolumento, label: 'Emolumento'},
-              {value: TransactionInterface.TransactionType.Fee, label: 'Taxa'},
-              {value: TransactionInterface.TransactionType.Investment, label: 'Aporte'},
-              {value: TransactionInterface.TransactionType.JCP, label: 'JCP'},
-              {value: TransactionInterface.TransactionType.Profit, label: 'Provento'},
-              {value: TransactionInterface.TransactionType.Rent, label: 'Aluguel'},
-              {value: TransactionInterface.TransactionType.Sell, label: 'Venda'},
-              {value: TransactionInterface.TransactionType.Whithdraw, label: 'Retirada'},
-              {value: TransactionInterface.TransactionType.Gain, label: 'Ganho'},
-              {value: TransactionInterface.TransactionType.Cost, label: 'Despesa'},
-              {value: TransactionInterface.TransactionType.VirtualCost, label: 'Despesa (virtual)'},
-            ]}
-          />
-        </Box>
-        <Box mb={3}>
-          <FieldSelect
-            name="category"
-            value={transaction?.category}
-            label="Categoria"
-            // rules={{required: true}}
-            options={categories ? categories.map(x => ({ value: x.id, label: x.name })) : []}
-          />
-        </Box>
-        <Box mb={3}>
-          <FieldNumber
-            name="amount"
-            value={transaction?.amount || 1}
-            label="Quantidade"
-            rules={{required: true}}
-          />
-        </Box>
+        {accountType === AccountInterface.AccountType.Investment && (
+          <Box mb={3}>
+            <FieldNumber
+              name="amount"
+              value={transaction?.amount || 1}
+              label="Quantidade"
+              rules={{required: true}}
+            />
+          </Box>
+        )}
         <Box display="flex" justifyContent="space-between">
           <Box>
             <Button type="submit" variant="contained" color="primary">Confirmar</Button>
@@ -170,5 +204,9 @@ const Transaction = () => {
     </Layout>
   );
 };
+
+export async function getServerSideProps({ query }) {
+  return { props: { id: query.id } };
+}
 
 export default Transaction;

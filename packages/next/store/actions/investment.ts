@@ -17,7 +17,7 @@ const fetchError = error => ({
   payload: error
 });
 
-export const fetchInvestment = (force = false) => async (dispatch, getState) => {
+export const fetchInvestment = ({ force } = { force: false }) => async (dispatch, getState) => {
   const state = getState();
   if (force || state.investment.status === 'idle') {
     dispatch(fetchStart());

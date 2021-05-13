@@ -1,6 +1,7 @@
 import moment from 'moment';
 import BalanceModel from '../../models/Balance';
 import FinanceModel from '../../models/Finance';
+import InvestmentController from '../Investment';
 
 /**
 * Balance controller
@@ -9,10 +10,12 @@ export default class BalanceController {
 
   private model;
   private financeModel;
+  private investmentController;
 
   constructor () {
     this.model = new BalanceModel();
     this.financeModel = new FinanceModel();
+    this.investmentController = new InvestmentController();
   }
 
   async list(): Promise<any> {
@@ -39,12 +42,20 @@ export default class BalanceController {
         invested: 0,
         profit: 0,
         gain: 0,
-        cost: 0
+        cost: 0,
       }));
       date.subtract(1, 'month').endOf('month');
     } while (moment().year() === date.year())
+    const investments = await this.investmentController.listCurrent();
     return result
-      .map(x => ({ ...x, result: x.balance + x.invested }))
+      .map(x => {
+        const valorization = x.month === moment().format('YYYY-MM') ? investments.total.valorization : 0;
+        return {
+          ...x,
+          valorization,
+          result: x.balance + x.invested + valorization
+        }
+      })
       .sort((a, b) => b.month.localeCompare(a.month));
   }
 

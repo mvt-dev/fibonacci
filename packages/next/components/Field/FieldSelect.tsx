@@ -8,6 +8,7 @@ interface FieldSelectProps {
   value?: any;
   rules?: {};
   options?: Array<{value: string, label: string}>;
+  onChange?: (value: string) => void;
 }
 
 const FieldSelect = (props: FieldSelectProps): React.ReactElement => {
@@ -17,12 +18,19 @@ const FieldSelect = (props: FieldSelectProps): React.ReactElement => {
     label,
     rules,
     options,
+    onChange
   } = props;
-  const { control, setValue } = useFormContext();
+  const { control, setValue, watch } = useFormContext();
 
   useEffect(() => {
     if (value) setValue(name, value);
   }, [value]);
+
+  const valueWatch = watch(name);
+
+  useEffect(() => {
+    if (onChange) onChange(valueWatch);
+  });
 
   return (
     <Controller
