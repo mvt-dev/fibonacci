@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "docker": "docker-compose build && docker-compose up",
-    "next": "yarn workspace @fibonacci/next"
+    "next": "yarn workspace @fibonacci/next",
+    "dump": "docker exec fibonacci_db_1 pg_dump -Upostgres fibonacci > fibonacci.sql"
   },
   "workspaces": ["packages/*"],
   "dependencies": {

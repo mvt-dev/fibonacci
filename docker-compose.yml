@@ -10,3 +10,16 @@ services:
     - ./docker/db:/docker-entrypoint-initdb.d/
     environment:
       POSTGRES_PASSWORD: Fibonacci
+  
+  nextjs:
+    ports:
+      - 5000:5000
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # - ./packages/next:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
+    # env_file:
+      # - .env

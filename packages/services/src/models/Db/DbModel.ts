@@ -1,6 +1,5 @@
 import { types } from 'pg';
 import { knex, Knex } from 'knex';
-import DateHelper from '../../helpers/Date';
 import moment from 'moment';
 
 interface PgConnection {
@@ -19,11 +18,11 @@ export default class DbModel {
   db: any;
 
   constructor({
-    database = 'fibonacci',
-    host = '127.0.0.1',
-    user = 'postgres',
-    password = 'Fibonacci',
-    port = 5432,
+    database = process.env.DB_DATABASE,
+    host = process.env.DB_HOST,
+    user = process.env.DB_USER,
+    password = process.env.DB_PASSWORD,
+    port = Number(process.env.DB_PORT),
   }: PgConnection) {
     types.setTypeParser(types.builtins.DATE, value => value && moment.utc(value));
     types.setTypeParser(types.builtins.TIMESTAMP, value => value && moment.utc(value));
