@@ -29,4 +29,9 @@ export default class FinanceController {
     };
   }
 
+  async getHistoricalData(symbol: string): Promise<any> {
+    const data = await this.model.getHistoricalData(symbol);
+    return data;
+  }
+
 }

@@ -1,6 +1,7 @@
 import { types } from 'pg';
 import { knex, Knex } from 'knex';
 import moment from 'moment';
+// @ts-ignore
 import knexStringcase from 'knex-stringcase';
 
 interface PgConnection {

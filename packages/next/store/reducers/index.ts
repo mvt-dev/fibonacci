@@ -7,6 +7,7 @@ import balance from './balance';
 import expenses from './expenses';
 import investment from './investment';
 import transactions from './transactions';
+import assets from './assets';
 
 const combinedReducer = combineReducers({
   snackbar,
@@ -16,6 +17,7 @@ const combinedReducer = combineReducers({
 	expenses,
 	investment,
 	transactions,
+	assets,
 });
 
 const reducer = (state, action) => {
@@ -32,6 +34,7 @@ const reducer = (state, action) => {
 		if (state.expenses) nextState.expenses = state.expenses;
 		if (state.investment) nextState.investment = state.investment;
 		if (state.transactions) nextState.transactions = state.transactions;
+		if (state.assets) nextState.assets = state.assets;
 
 		return nextState;
 	}

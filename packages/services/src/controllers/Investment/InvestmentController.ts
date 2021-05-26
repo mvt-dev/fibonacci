@@ -1,5 +1,7 @@
 import InvestmentModel from '../../models/Investment';
 import FinanceModel from '../../models/Finance';
+import AssetModel from '../../models/Asset';
+import moment from 'moment';
 
 /**
 * Investment controller
@@ -8,19 +10,28 @@ export default class InvestmentController {
 
   private model;
   private financeModel;
+  private assetModel;
 
   constructor () {
     this.model = new InvestmentModel();
     this.financeModel = new FinanceModel();
+    this.assetModel = new AssetModel();
   }
 
-  async listCurrent(): Promise<any> {
-    const investments = await this.model.listCurrent();
+  async list(endDate: Date = null): Promise<any> {
+    let investments = [];
     let currency;
-    try {
-      currency = await this.financeModel.getCurrency('USDBRL');
-    } catch (error) {
-      currency = { closePrice: 1, previousPrice: 1 };
+    if (endDate) {
+      investments = await this.model.list(endDate);
+      const _currency = await this.assetModel.getPrice('USD', endDate);
+      currency = _currency ? { closePrice: _currency.close, previousPrice: _currency.open } : { closePrice: 1, previousPrice: 1 };
+    } else {
+      investments = await this.model.list(moment());
+      try {
+        currency = await this.financeModel.getCurrency('USDBRL');
+      } catch (error) {
+        currency = { closePrice: 1, previousPrice: 1 };
+      }
     }
     for (const investment of investments) {
       if (investment.type === 'FIXED_BR') {
@@ -34,29 +45,41 @@ export default class InvestmentController {
       } else {
         try {
           if (investment.currency === 'USD') {
-            const finance = await this.financeModel.getClosePrice(investment.asset);
+            if (!endDate) {
+              const finance = await this.financeModel.getClosePrice(investment.asset);
+              investment.closePrice = finance.closePrice * currency.closePrice;
+              investment.previousPrice = finance.previousPrice * currency.previousPrice;
+            } else {
+              investment.closePrice = investment.closePrice * currency.closePrice;
+              investment.previousPrice = investment.previousPrice * currency.previousPrice;
+            }
             investment.value = investment.value * currency.closePrice;
             investment.average = investment.average * currency.closePrice;
-            investment.closePrice = finance.closePrice * currency.closePrice;
-            investment.previousPrice = finance.previousPrice * currency.previousPrice;
             investment.variation = (investment.closePrice / investment.previousPrice - 1) * 100;
             investment.valorization = (investment.closePrice - investment.average) * investment.amount;
             investment.currentValue = investment.value + investment.valorization;
             investment.valorizationPercent = (investment.currentValue / investment.value - 1) * 100;
           } else if (investment.asset === 'BTC') {
-            const finance = await this.financeModel.getClosePrice('BTC-USD');
-            investment.closePrice = finance.closePrice * currency.closePrice;
-            investment.previousPrice = finance.previousPrice * currency.previousPrice;
+            if (!endDate) {
+              const finance = await this.financeModel.getClosePrice('BTC-USD');
+              investment.closePrice = finance.closePrice * currency.closePrice;
+              investment.previousPrice = finance.previousPrice * currency.previousPrice;
+            } else {
+              investment.closePrice = investment.closePrice * currency.closePrice;
+              investment.previousPrice = investment.previousPrice * currency.previousPrice;
+            }
             investment.variation = (investment.closePrice / investment.previousPrice - 1) * 100;
             investment.valorization = (investment.closePrice - investment.average) * investment.amount;
             investment.currentValue = investment.value + investment.valorization;
             investment.valorizationPercent = (investment.currentValue / investment.value - 1) * 100;
           } else {
-            const finance = await this.financeModel.getClosePrice(`${investment.asset}.SA`);
-            investment.closePrice = finance.closePrice;
-            investment.previousPrice = finance.previousPrice;
-            investment.variation = (finance.closePrice / finance.previousPrice - 1) * 100;
-            investment.valorization = (finance.closePrice - investment.average) * investment.amount;
+            if (!endDate) {
+              const finance = await this.financeModel.getClosePrice(`${investment.asset}.SA`);
+              investment.closePrice = finance.closePrice;
+              investment.previousPrice = finance.previousPrice;
+            }
+            investment.variation = (investment.closePrice / investment.previousPrice - 1) * 100;
+            investment.valorization = (investment.closePrice - investment.average) * investment.amount;
             investment.currentValue = investment.value + investment.valorization;
             investment.valorizationPercent = (investment.currentValue / investment.value - 1) * 100;
           }

@@ -16,7 +16,7 @@ export default class BalanceModel extends DbModel {
   }
 
   async list(iniDate: string, endDate: string): Promise<any> {
-    return this.db(this.table)
+    const query = this.db(this.table)
       .leftJoin(this.tableAccount, `${this.tableAccount}.id`, `${this.table}.account`)
       .select(
         `${this.tableAccount}.name`,
@@ -30,6 +30,7 @@ export default class BalanceModel extends DbModel {
       .whereNot(`${this.tableAccount}.type`, AccountInterface.AccountType.Credit)
       .where(`${this.table}.date`, '<=', endDate)
       .groupBy(`${this.tableAccount}.name`, `${this.tableAccount}.currency`);
+    return query;
   }
 
 }

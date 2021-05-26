@@ -7,22 +7,6 @@ export default class FinanceModel {
 
   private ALPHA_VANTAGE_KEY = '4UVLCVWWTJ90JLO4';
 
-  async getClosePrice(symbol: string): Promise<any> {
-    const { data } = await axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`);
-    return {
-      closePrice: data.chart.result[0].meta.regularMarketPrice,
-      previousPrice: data.chart.result[0].meta.previousClose,
-    };
-  }
-
-  async getCurrency(symbol: string): Promise<any> {
-    const { data } = await axios.get(`https://query1.finance.yahoo.com/v7/finance/spark?symbols=${symbol}%3DX`);
-    return {
-      closePrice: data.spark.result[0].response[0].meta.regularMarketPrice,
-      previousPrice: data.spark.result[0].response[0].meta.previousClose,
-    };
-  }
-
   async getHistoricalData(symbol: string, full: boolean = false): Promise<any> {
     const TIME_PROPERTY = 'Time Series (Daily)';
     const outputsize = full ? 'full' : 'compact';
@@ -48,6 +32,19 @@ export default class FinanceModel {
       high: data[TIME_PROPERTY][key]['2. high'] ? Number(data[TIME_PROPERTY][key]['2. high']) : null,
       low: data[TIME_PROPERTY][key]['3. low'] ? Number(data[TIME_PROPERTY][key]['3. low']) : null,
       close: data[TIME_PROPERTY][key]['4. close'] ? Number(data[TIME_PROPERTY][key]['4. close']) : null,
+    })) : [];
+  }
+
+  async getCryptocurrencyHistory(symbol: string, market: string): Promise<any> {
+    const TIME_PROPERTY = 'Time Series (Digital Currency Daily)';
+    const { data } = await axios.get(`https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=${symbol}&market=${market}&apikey=${this.ALPHA_VANTAGE_KEY}`);
+    return data[TIME_PROPERTY] ? Object.keys(data[TIME_PROPERTY]).map(key => ({
+      date: key,
+      open: data[TIME_PROPERTY][key][`1a. open (${market})`] ? Number(data[TIME_PROPERTY][key][`1a. open (${market})`]) : null,
+      high: data[TIME_PROPERTY][key][`2a. high (${market})`] ? Number(data[TIME_PROPERTY][key][`2a. high (${market})`]) : null,
+      low: data[TIME_PROPERTY][key][`3a. low (${market})`] ? Number(data[TIME_PROPERTY][key][`3a. low (${market})`]) : null,
+      close: data[TIME_PROPERTY][key][`4a. close (${market})`] ? Number(data[TIME_PROPERTY][key][`4a. close (${market})`]) : null,
+      volume: data[TIME_PROPERTY][key]['5. volume'] ? Number(data[TIME_PROPERTY][key]['5. volume']) : null,
     })) : [];
   }
 

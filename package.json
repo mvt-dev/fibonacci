@@ -6,6 +6,7 @@
   "scripts": {
     "docker": "docker-compose build && docker-compose up",
     "next": "yarn workspace @fibonacci/next",
+    "jobs": "yarn workspace @fibonacci/jobs",
     "dump": "docker exec fibonacci_db_1 pg_dump -Upostgres fibonacci > fibonacci.sql"
   },
   "workspaces": ["packages/*"],

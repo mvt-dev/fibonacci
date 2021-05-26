@@ -5,6 +5,7 @@ import InvestmentController from './controllers/Investment';
 import ExpensesController from './controllers/Expenses';
 import BalanceController from './controllers/Balance';
 import FinanceController from './controllers/Finance';
+import AssetController from './controllers/Asset';
 
 export {
   AccountController,
@@ -14,4 +15,5 @@ export {
   ExpensesController,
   BalanceController,
   FinanceController,
+  AssetController,
 };

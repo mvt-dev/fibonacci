@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import Snackbar from '../Snackbar';
 import useStyles from './Layout.style';
+import { MENUS } from '../../constants';
 
 
 const Layout = (props: React.PropsWithChildren<any>): React.ReactElement => {
@@ -19,36 +20,13 @@ const Layout = (props: React.PropsWithChildren<any>): React.ReactElement => {
       <Snackbar />
       <nav>
         <List className={classes.listBox}>
-          <NextLink href="/account">
-            <ListItem button>
-              <ListItemText primary="Contas" />
-            </ListItem>
-          </NextLink>
-          <NextLink href="/category">
-            <ListItem button>
-              <ListItemText primary="Categorias" />
-            </ListItem>
-          </NextLink>
-          <NextLink href="/transaction">
-            <ListItem button>
-              <ListItemText primary="Extrato" />
-            </ListItem>
-          </NextLink>
-          <NextLink href="/investment">
-            <ListItem button>
-              <ListItemText primary="Investimentos" />
-            </ListItem>
-          </NextLink>
-          <NextLink href="/expenses">
-            <ListItem button>
-              <ListItemText primary="Gastos" />
-            </ListItem>
-          </NextLink>
-          <NextLink href="/balance">
-            <ListItem button>
-              <ListItemText primary="Balanço" />
-            </ListItem>
-          </NextLink>
+          {MENUS.map(menu => (
+            <NextLink href={menu.href} key={menu.text}>
+              <ListItem button>
+                <ListItemText primary={menu.text} />
+              </ListItem>
+            </NextLink>
+          ))}
         </List>
       </nav>
       <main className={classes.container}>
