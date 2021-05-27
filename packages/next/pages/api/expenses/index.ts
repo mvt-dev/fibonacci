@@ -1,4 +1,4 @@
-import { ExpensesController } from '@fibonacci/services';
+import ExpensesController from '../../../controllers/ExpensesController';
 import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
 
 const controller = new ExpensesController();

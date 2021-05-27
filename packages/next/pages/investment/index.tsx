@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
-import { Typography, Box, Breadcrumbs, Chip } from '@material-ui/core';
+import { Typography, Box, Breadcrumbs } from '@material-ui/core';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
 import numeric from '../../libs/numeric';

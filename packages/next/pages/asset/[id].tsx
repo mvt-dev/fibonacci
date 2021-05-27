@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../../components/Layout';
 import Form from '../../components/Form';
 import { FieldText, FieldSelect } from '../../components/Field';
-import { AssetInterface } from '@fibonacci/interfaces';
+import { AssetType } from '../../interfaces/AssetInterface';
 import useService from '../../hooks/useService';
 import { snackbarShowSuccess, snackbarShowError } from '../../store/actions/snackbar';
 import DialogAlert from '../../components/DialogAlert';
@@ -91,11 +91,11 @@ const Asset = () => {
             label="Tipo"
             rules={{required: true}}
             options={[
-              {value: AssetInterface.AssetType.FixedBR, label: 'Renda Fixa'},
-              {value: AssetInterface.AssetType.StockBR, label: 'Ação'},
-              {value: AssetInterface.AssetType.ReitBR, label: 'FII'},
-              {value: AssetInterface.AssetType.StockUS, label: 'Stock'},
-              {value: AssetInterface.AssetType.Crypto, label: 'Criptomoeda'},
+              {value: AssetType.FixedBR, label: 'Renda Fixa'},
+              {value: AssetType.StockBR, label: 'Ação'},
+              {value: AssetType.ReitBR, label: 'FII'},
+              {value: AssetType.StockUS, label: 'Stock'},
+              {value: AssetType.Crypto, label: 'Criptomoeda'},
             ]}
           />
         </Box>

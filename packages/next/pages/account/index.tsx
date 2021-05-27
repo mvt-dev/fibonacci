@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
-import { AccountInterface } from '@fibonacci/interfaces';
+import { AccountType } from '../../interfaces/AccountInterface';
 import { fetchAccounts } from '../../store/actions/accounts';
 import numeric from '../../libs/numeric';
 
@@ -26,9 +26,9 @@ const Accounts = () => {
       header: 'Tipo de conta',
       cell: (row) => {
         switch (row.type) {
-          case AccountInterface.AccountType.Transaction: return 'Conta Corrente';
-          case AccountInterface.AccountType.Credit: return 'Cartão de Crédito';
-          case AccountInterface.AccountType.Investment: return 'Investimento';
+          case AccountType.Transaction: return 'Conta Corrente';
+          case AccountType.Credit: return 'Cartão de Crédito';
+          case AccountType.Investment: return 'Investimento';
           default: return '-';
         }
       }

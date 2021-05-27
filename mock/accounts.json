@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Nu Bank",
+    "type": "TRANSACTION",
+    "currency": "BRL"
+  },
+  {
+    "id": 2,
+    "name": "Roxinho",
+    "type": "CREDIT",
+    "currency": "BRL"
+  },
+  {
+    "id": 3,
+    "name": "Clear",
+    "type": "INVESTMENT",
+    "currency": "BRL"
+  },
+  {
+    "id": 4,
+    "name": "Avenue",
+    "type": "INVESTMENT",
+    "currency": "USD"
+  }
+]

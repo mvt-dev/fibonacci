@@ -1,6 +1,6 @@
 import { validation, isValid } from '../../../libs/validation';
-import { AccountController } from '@fibonacci/services';
-import { AccountInterface } from '@fibonacci/interfaces';
+import AccountController from '../../../controllers/AccountController';
+import { AccountType, AccountCurrency } from '../../../interfaces/AccountInterface';
 import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
 import middlewareValidationError from '../../../middlewares/middlewareValidationError';
 
@@ -32,8 +32,8 @@ const create = async (req, res) => {
   try {
     const { error, name, type, currency } = isValid(req.body, {
       name: validation.string().required(),
-      type: validation.string().valid(...Object.values(AccountInterface.AccountType)).required(),
-      currency: validation.string().valid(...Object.values(AccountInterface.AccountCurrency)).required(),
+      type: validation.string().valid(...Object.values(AccountType)).required(),
+      currency: validation.string().valid(...Object.values(AccountCurrency)).required(),
     });
     if (error) return middlewareValidationError(error, res);
     const account = await accountControler.create({
@@ -52,8 +52,8 @@ const update = async (req, res) => {
     const { error, id, name, type, currency } = isValid({ ...req.query, ...req.body }, {
       id: validation.number().integer().required(),
       name: validation.string().required(),
-      type: validation.string().valid(...Object.values(AccountInterface.AccountType)).required(),
-      currency: validation.string().valid(...Object.values(AccountInterface.AccountCurrency)).required(),
+      type: validation.string().valid(...Object.values(AccountType)).required(),
+      currency: validation.string().valid(...Object.values(AccountCurrency)).required(),
     });
     if (error) return middlewareValidationError(error, res);
     const account = await accountControler.update({

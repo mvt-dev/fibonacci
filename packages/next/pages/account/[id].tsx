@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../../components/Layout';
 import Form from '../../components/Form';
 import { FieldText, FieldSelect } from '../../components/Field';
-import { AccountInterface } from '@fibonacci/interfaces';
+import { AccountType, AccountCurrency } from '../../interfaces/AccountInterface';
 import useService from '../../hooks/useService';
 import { snackbarShowSuccess, snackbarShowError } from '../../store/actions/snackbar';
 import DialogAlert from '../../components/DialogAlert';
@@ -82,9 +82,9 @@ const Account = () => {
             label="Tipo de conta"
             rules={{required: true}}
             options={[
-              {value: AccountInterface.AccountType.Transaction, label: 'Conta Corrente'},
-              {value: AccountInterface.AccountType.Credit, label: 'Cartão de Crédito'},
-              {value: AccountInterface.AccountType.Investment, label: 'Investimento'},
+              {value: AccountType.Transaction, label: 'Conta Corrente'},
+              {value: AccountType.Credit, label: 'Cartão de Crédito'},
+              {value: AccountType.Investment, label: 'Investimento'},
             ]}
           />
         </Box>
@@ -95,8 +95,8 @@ const Account = () => {
             label="Moeda"
             rules={{required: true}}
             options={[
-              {value: AccountInterface.AccountCurrency.BRL, label: 'R$ (BRL)'},
-              {value: AccountInterface.AccountCurrency.USD, label: '$ (USD)'},
+              {value: AccountCurrency.BRL, label: 'R$ (BRL)'},
+              {value: AccountCurrency.USD, label: '$ (USD)'},
             ]}
           />
         </Box>

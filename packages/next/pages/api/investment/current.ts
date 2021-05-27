@@ -1,4 +1,4 @@
-import { InvestmentController } from '@fibonacci/services';
+import InvestmentController from '../../../controllers/InvestmentController';
 import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
 
 const investmentControler = new InvestmentController();

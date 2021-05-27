@@ -13,7 +13,8 @@ import { snackbarShowSuccess, snackbarShowError } from '../../store/actions/snac
 import DialogAlert from '../../components/DialogAlert';
 import { get, create, update, remove } from '../../services/transactionService';
 import moment from 'moment';
-import { TransactionInterface, AccountInterface } from '@fibonacci/interfaces';
+import { AccountType } from '../../interfaces/AccountInterface';
+import { TransactionType } from '../../interfaces/TransactionInterface';
 import { fetchTransactions } from '../../store/actions/transactions';
 import { fetchAccounts } from '../../store/actions/accounts';
 import { fetchCategories } from '../../store/actions/categories';
@@ -40,23 +41,23 @@ const Transaction = (props: TransactionProps) => {
 
   const {data: transaction, loading} = id !== 'new' ? useService(get, id) : { data: null, loading: false };
 
-  const types = accountType === AccountInterface.AccountType.Investment ? [
-    {value: TransactionInterface.TransactionType.Buy, label: 'Compra'},
-    {value: TransactionInterface.TransactionType.Sell, label: 'Venda'},
-    {value: TransactionInterface.TransactionType.Investment, label: 'Aporte'},
-    {value: TransactionInterface.TransactionType.Whithdraw, label: 'Retirada'},
-    {value: TransactionInterface.TransactionType.Fee, label: 'Taxa'},
-    {value: TransactionInterface.TransactionType.Dividend, label: 'Dividendo'},
-    {value: TransactionInterface.TransactionType.Emolumento, label: 'Emolumento'},
-    {value: TransactionInterface.TransactionType.JCP, label: 'JCP'},
-    {value: TransactionInterface.TransactionType.Profit, label: 'Provento'},
-    {value: TransactionInterface.TransactionType.Rent, label: 'Aluguel'},
-    {value: TransactionInterface.TransactionType.Adjustment, label: 'Ajuste'},
+  const types = accountType === AccountType.Investment ? [
+    {value: TransactionType.Buy, label: 'Compra'},
+    {value: TransactionType.Sell, label: 'Venda'},
+    {value: TransactionType.Investment, label: 'Aporte'},
+    {value: TransactionType.Whithdraw, label: 'Retirada'},
+    {value: TransactionType.Fee, label: 'Taxa'},
+    {value: TransactionType.Dividend, label: 'Dividendo'},
+    {value: TransactionType.Emolumento, label: 'Emolumento'},
+    {value: TransactionType.JCP, label: 'JCP'},
+    {value: TransactionType.Profit, label: 'Provento'},
+    {value: TransactionType.Rent, label: 'Aluguel'},
+    {value: TransactionType.Adjustment, label: 'Ajuste'},
   ] : [
-    {value: TransactionInterface.TransactionType.Gain, label: 'Ganho'},
-    {value: TransactionInterface.TransactionType.Cost, label: 'Despesa'},
-    {value: TransactionInterface.TransactionType.VirtualCost, label: 'Investimento'},
-    {value: TransactionInterface.TransactionType.Adjustment, label: 'Ajuste'},
+    {value: TransactionType.Gain, label: 'Ganho'},
+    {value: TransactionType.Cost, label: 'Despesa'},
+    {value: TransactionType.VirtualCost, label: 'Investimento'},
+    {value: TransactionType.Adjustment, label: 'Ajuste'},
   ];
 
   const onChangeAccount = (value) => {
@@ -147,7 +148,7 @@ const Transaction = (props: TransactionProps) => {
             options={types}
           />
         </Box>
-        {accountType !== AccountInterface.AccountType.Investment && (
+        {accountType !== AccountType.Investment && (
           <Box mb={3}>
             <FieldSelect
               name="category"
@@ -174,7 +175,7 @@ const Transaction = (props: TransactionProps) => {
             rules={{required: true}}
           />
         </Box>
-        {accountType === AccountInterface.AccountType.Investment && (
+        {accountType === AccountType.Investment && (
           <Box mb={3}>
             <FieldNumber
               name="amount"

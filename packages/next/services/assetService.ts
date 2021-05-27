@@ -1,5 +1,5 @@
 import request from '../libs/request';
-import { AssetInterface } from '@fibonacci/interfaces';
+import { Asset } from '../interfaces/AssetInterface';
 
 const ENDPOINT = '/api/asset';
 
@@ -13,7 +13,7 @@ export const get = async (id: number | string) => {
   return data;
 }
 
-export const create = async ({ name, symbol, type }: AssetInterface.Asset) => {
+export const create = async ({ name, symbol, type }: Asset) => {
   const { data } = await request.post(ENDPOINT, {
     name,
     symbol,
@@ -22,7 +22,7 @@ export const create = async ({ name, symbol, type }: AssetInterface.Asset) => {
   return data;
 }
 
-export const update = async ({ id, name, symbol, type }: AssetInterface.Asset) => {
+export const update = async ({ id, name, symbol, type }: Asset) => {
   const { data } = await request.patch(`${ENDPOINT}/${id}`, {
     name,
     symbol,
@@ -33,10 +33,5 @@ export const update = async ({ id, name, symbol, type }: AssetInterface.Asset) =
 
 export const remove = async (id: number | string) => {
   const { data } = await request.delete(`${ENDPOINT}/${id}`);
-  return data;
-}
-
-export const updatePrices = async (assets: number[] = [], clean = false) => {
-  const { data } = await request.patch(`${ENDPOINT}/price`);
   return data;
 }

@@ -12,7 +12,7 @@ import useService from '../../hooks/useService';
 import { snackbarShowSuccess, snackbarShowError } from '../../store/actions/snackbar';
 import DialogAlert from '../../components/DialogAlert';
 import { get, create, update, remove } from '../../services/categoryService';
-import { CategoryInterface } from '@fibonacci/interfaces';
+import { CategoryTag } from '../../interfaces/CategoryInterface';
 import { fetchCategories } from '../../store/actions/categories';
 
 const Category = () => {
@@ -90,9 +90,9 @@ const Category = () => {
             label="Tag"
             rules={{required: true}}
             options={[
-              {value: CategoryInterface.CategoryTag.Debit, label: 'Débito'},
-              {value: CategoryInterface.CategoryTag.Credit, label: 'Crédito'},
-              {value: CategoryInterface.CategoryTag.Virtual, label: 'Virtual'},
+              {value: CategoryTag.Debit, label: 'Débito'},
+              {value: CategoryTag.Credit, label: 'Crédito'},
+              {value: CategoryTag.Virtual, label: 'Virtual'},
             ]}
           />
         </Box>

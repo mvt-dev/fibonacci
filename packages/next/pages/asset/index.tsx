@@ -5,14 +5,11 @@ import NextLink from 'next/link';
 import {Typography, IconButton, Box, Breadcrumbs} from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
-import UpdateIcon from '@material-ui/icons/Update';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
-import { AssetInterface } from '@fibonacci/interfaces';
+import { AssetType } from '../../interfaces/AssetInterface';
 import { fetchAssets } from '../../store/actions/assets';
 import moment from 'moment';
-import { updatePrices } from '../../services/assetService';
-import { snackbarShowError } from '../../store/actions/snackbar';
 
 const Assets = () => {
   const dispatch = useDispatch();
@@ -33,11 +30,11 @@ const Assets = () => {
       header: 'Tipo',
       cell: (row) => {
         switch (row.type) {
-          case AssetInterface.AssetType.FixedBR: return 'Renda Fixa';
-          case AssetInterface.AssetType.StockBR: return 'Ações';
-          case AssetInterface.AssetType.ReitBR: return 'FII';
-          case AssetInterface.AssetType.StockUS: return 'Stock';
-          case AssetInterface.AssetType.Crypto: return 'Criptomoedas';
+          case AssetType.FixedBR: return 'Renda Fixa';
+          case AssetType.StockBR: return 'Ações';
+          case AssetType.ReitBR: return 'FII';
+          case AssetType.StockUS: return 'Stock';
+          case AssetType.Crypto: return 'Criptomoedas';
           default: return '-';
         }
       }
@@ -59,16 +56,6 @@ const Assets = () => {
     },
   ];
 
-  const onUpdatePrices = async () => {
-    try {
-      const results = await updatePrices();
-      console.log(results);
-      dispatch(fetchAssets({ force: true }));
-    } catch (error) {
-      dispatch(snackbarShowError(error?.response?.data?.message || 'Erro interno! Por favor tente novamente.'));
-    }
-  }
-
   return (
     <Layout>
       <Head>
@@ -80,7 +67,6 @@ const Assets = () => {
         </Breadcrumbs>
       </Box>
       <Table columns={columns} data={assets} loading={status === 'loading'} error={error}>
-        <IconButton color="primary" onClick={onUpdatePrices}><UpdateIcon /></IconButton>
         <NextLink href="/asset/new">
           <IconButton color="primary"><AddIcon /></IconButton>
         </NextLink>

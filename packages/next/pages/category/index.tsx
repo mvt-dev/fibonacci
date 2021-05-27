@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
-import { CategoryInterface } from '@fibonacci/interfaces';
+import { CategoryTag } from '../../interfaces/CategoryInterface';
 import { fetchCategories } from '../../store/actions/categories';
 
 const Categories = () => {
@@ -30,9 +30,9 @@ const Categories = () => {
       header: 'Tag',
       cell: (row) => {
         switch (row.tag) {
-          case CategoryInterface.CategoryTag.Debit: return 'Débito';
-          case CategoryInterface.CategoryTag.Credit: return 'Crédito';
-          case CategoryInterface.CategoryTag.Virtual: return 'Virtual';
+          case CategoryTag.Debit: return 'Débito';
+          case CategoryTag.Credit: return 'Crédito';
+          case CategoryTag.Virtual: return 'Virtual';
           default: return '-';
         }
       }

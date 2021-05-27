@@ -1,6 +1,6 @@
 import { validation, isValid } from '../../../libs/validation';
-import { CategoryController } from '@fibonacci/services';
-import { CategoryInterface } from '@fibonacci/interfaces';
+import CategoryController from '../../../controllers/CategoryController';
+import { CategoryTag } from '../../../interfaces/CategoryInterface';
 import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
 import middlewareValidationError from '../../../middlewares/middlewareValidationError';
 
@@ -33,7 +33,7 @@ const create = async (req, res) => {
     const { error, name, color, tag } = isValid(req.body, {
       name: validation.string().required(),
       color: validation.string().required(),
-      tag: validation.string().valid(...Object.values(CategoryInterface.CategoryTag)).required(),
+      tag: validation.string().valid(...Object.values(CategoryTag)).required(),
     });
     if (error) return middlewareValidationError(error, res);
     const account = await categoryControler.create({
@@ -53,7 +53,7 @@ const update = async (req, res) => {
       id: validation.number().integer(),
       name: validation.string().required(),
       color: validation.string().required(),
-      tag: validation.string().valid(...Object.values(CategoryInterface.CategoryTag)).required(),
+      tag: validation.string().valid(...Object.values(CategoryTag)).required(),
     });
     if (error) return middlewareValidationError(error, res);
     const account = await categoryControler.update({

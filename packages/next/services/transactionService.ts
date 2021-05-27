@@ -1,5 +1,5 @@
 import request from '../libs/request';
-import { TransactionInterface } from '@fibonacci/interfaces';
+import { Transaction } from '../interfaces/TransactionInterface';
 
 const ENDPOINT = '/api/transaction';
 
@@ -13,12 +13,12 @@ export const get = async (id: number | string) => {
   return data;
 }
 
-export const create = async (transaction: TransactionInterface.Transaction) => {
+export const create = async (transaction: Transaction) => {
   const { data } = await request.post(ENDPOINT, transaction);
   return data;
 }
 
-export const update = async ({ id, ...transaction }: TransactionInterface.Transaction) => {
+export const update = async ({ id, ...transaction }: Transaction) => {
   const { data } = await request.patch(`${ENDPOINT}/${id}`, transaction);
   return data;
 }

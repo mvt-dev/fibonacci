@@ -1,4 +1,4 @@
-import { BalanceController } from '@fibonacci/services';
+import BalanceController from '../../../controllers/BalanceController';
 import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
 
 const controller = new BalanceController();

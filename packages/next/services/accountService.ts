@@ -1,5 +1,5 @@
 import request from '../libs/request';
-import { AccountInterface } from '@fibonacci/interfaces';
+import { Account } from '../interfaces/AccountInterface';
 
 const ENDPOINT = '/api/account';
 
@@ -13,7 +13,7 @@ export const get = async (id: number | string) => {
   return data;
 }
 
-export const create = async ({ name, type, currency }: AccountInterface.Account) => {
+export const create = async ({ name, type, currency }: Account) => {
   const { data } = await request.post(ENDPOINT, {
     name,
     type,
@@ -22,7 +22,7 @@ export const create = async ({ name, type, currency }: AccountInterface.Account)
   return data;
 }
 
-export const update = async ({ id, name, type, currency }: AccountInterface.Account) => {
+export const update = async ({ id, name, type, currency }: Account) => {
   const { data } = await request.patch(`${ENDPOINT}/${id}`, {
     name,
     type,

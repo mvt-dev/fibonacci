@@ -1,5 +1,5 @@
 import { validation, isValid } from '../../../libs/validation';
-import { TransactionController } from '@fibonacci/services';
+import TransactionController from '../../../controllers/TransactionController';
 import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
 import middlewareValidationError from '../../../middlewares/middlewareValidationError';
 

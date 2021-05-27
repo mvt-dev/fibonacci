@@ -1,6 +1,6 @@
 import { validation, isValid } from '../../../libs/validation';
-import { AssetController } from '@fibonacci/services';
-import { AssetInterface } from '@fibonacci/interfaces';
+import AssetController from '../../../controllers/AssetController';
+import { AssetType } from '../../../interfaces/AssetInterface';
 import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
 import middlewareValidationError from '../../../middlewares/middlewareValidationError';
 
@@ -33,7 +33,7 @@ const create = async (req, res) => {
     const { error, name, symbol, type } = isValid(req.body, {
       name: validation.string().required(),
       symbol: validation.string().required(),
-      type: validation.string().valid(...Object.values(AssetInterface.AssetType)).required(),
+      type: validation.string().valid(...Object.values(AssetType)).required(),
     });
     if (error) return middlewareValidationError(error, res);
     const account = await assetControler.create({
@@ -53,7 +53,7 @@ const update = async (req, res) => {
       id: validation.number().integer(),
       name: validation.string().required(),
       symbol: validation.string().required(),
-      type: validation.string().valid(...Object.values(AssetInterface.AssetType)).required(),
+      type: validation.string().valid(...Object.values(AssetType)).required(),
     });
     if (error) return middlewareValidationError(error, res);
     const account = await assetControler.update({
