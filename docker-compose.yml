@@ -15,11 +15,19 @@ services:
     ports:
       - 5000:5000
     build:
-      context: .
+      context: ./packages/next
       dockerfile: Dockerfile
     volumes:
-      # - ./packages/next:/usr/src/app
       - /usr/src/app/node_modules
       - /usr/src/app/.next
-    # env_file:
-      # - .env
+  
+  jobs:
+    build:
+      context: ./packages/jobs
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=fibonacci
+      - DB_USER=postgres
+      - DB_PASSWORD=Fibonacci
+      - DB_PORT=5432

@@ -19,15 +19,15 @@ export default class AssetPriceJob {
 
   private async run () {
     const assets = await this.assetModel.list();
-    let diffDays = 0;
-    if (moment().isoWeekday() === 6) diffDays = 1;
-    if (moment().isoWeekday() === 7) diffDays = 2;
-    if (moment().isoWeekday() === 1) diffDays = 3;
+    let diffDays = 1;
+    if (moment().isoWeekday() === 6) diffDays = 2;
+    if (moment().isoWeekday() === 7) diffDays = 3;
+    if (moment().isoWeekday() === 1) diffDays = 4;
     const assetsToUpdate = assets.filter(x => x.symbol && (!x.lastPrice || (x.lastPrice && moment().diff(moment(x.lastPrice), 'days') > diffDays)));
     const asset = assetsToUpdate[0];
     if (asset?.symbol) {
       const full = asset.lastPrice ? moment().diff(asset.lastPrice, 'days') > 100 : true;
-      console.log(asset.symbol, full);
+      console.log(asset.symbol);
       let prices = [];
       if ([AssetInterface.AssetType.StockBR, AssetInterface.AssetType.ReitBR, AssetInterface.AssetType.StockUS].includes(asset.type)) {
         prices = await this.financeModel.getHistoricalData(asset.symbol, full);
@@ -37,7 +37,7 @@ export default class AssetPriceJob {
         prices = await this.financeModel.getCurrencyHistory(asset.symbol.split('-')[0], asset.symbol.split('-')[1], full);
       }
       const pricesParsed = prices
-        .filter((x: any) => moment.utc(x.date) < moment.utc())
+        .filter((x: any) => moment.utc(x.date) < moment.utc().subtract(1, 'day'))
         .filter((x: any) => asset?.lastPrice ? moment.utc(x.date) > moment(asset.lastPrice) : true)
         .map((x: any) => ({
           ...x,
