@@ -50,6 +50,7 @@ export default class BalanceController {
       });
       const investments = await this.investmentController.list(date.month() === moment().month() ? null : date.format('YYYY-MM-DD'));
       result.valorization = investments.total.valorization;
+      result.valorizationPercent = ((result.invested + result.valorization) / result.invested - 1) * 100;
       result.result = result.balance + result.invested + investments.total.valorization;
       results.push(result);
       date.subtract(1, 'month').endOf('month');

@@ -35,7 +35,7 @@ const Balance = () => {
       name: 'valorization',
       header: 'Valorização',
       align: 'right',
-      cell: row => <Typography variant="body2" color="primary">R$ {numeric.currency(row.valorization)}</Typography>,
+      cell: row => <Typography variant="body2" color="primary">R$ {numeric.currency(row.valorization)} ({numeric.currency(row.valorizationPercent)}%)</Typography>,
       sort: (order, a, b) => order === 'asc' ? a.valorization - b.valorization : b.valorization - a.valorization
     },
     {

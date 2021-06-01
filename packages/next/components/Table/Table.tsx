@@ -33,10 +33,12 @@ interface TableProps {
   error?: any;
   showSearch?: boolean;
   showTotal?: boolean;
+  onClickRow?: (row: any) => any;
+  isRowSelected?: (row: any) => boolean;
 };
 
 const Table = (props: React.PropsWithChildren<TableProps>): React.ReactElement => {
-  const { children, columns, data, loading, error, showSearch = true, showTotal = false } = props;
+  const { children, columns, data, loading, error, showSearch = true, showTotal = false, onClickRow = null, isRowSelected = null } = props;
   const [search, setSearch] = useState<string>('');
   const [sort, setSort] = useState([null, null]);
   const classes = useStyles();
@@ -103,7 +105,7 @@ const Table = (props: React.PropsWithChildren<TableProps>): React.ReactElement =
               </TableHead>
               <TableBody>
                 {dataFilteredSorted.map((row, index) => (
-                  <TableRow key={`row-${index}`}>
+                  <TableRow key={`row-${index}`} onClick={() => onClickRow ? onClickRow(row) : false} hover={!!onClickRow} selected={isRowSelected ? isRowSelected(row) : false}>
                     {columns.map(({ name, align, cell }) => (
                       <TableCell key={`row-${name}-${index}`} align={align || 'left'}>
                         {cell ? cell(row) : row[name]}

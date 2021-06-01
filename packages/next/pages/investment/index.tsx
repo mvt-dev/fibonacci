@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Head from 'next/head';
 import { Typography, Box, Breadcrumbs } from '@material-ui/core';
@@ -10,6 +10,7 @@ import InvestmentIndex from '../../components/InvestmentIndex';
 import Indicator from '../../components/Indicator';
 
 const Investments = () => {
+  const [filter, setFilter] = useState(null);
   const dispatch = useDispatch();
   dispatch(fetchInvestment());
   const { records: investments, status, error } = useSelector((state: any) => state.investment);
@@ -75,6 +76,18 @@ const Investments = () => {
     ...columnsDefault
   ];
 
+  const onClickRow = (row) => {
+    if (row.type === filter) {
+      setFilter(null);
+    } else {
+      setFilter(row.type);
+    }
+  }
+
+  const isRowSelected = (row) => row.type === filter;
+
+  const assetsFiltered = useMemo(() => investments?.assets ? investments.assets.filter(x => filter ? x.type === filter : true) : [], [filter]);
+
   return (
     <Layout>
       <Head>
@@ -93,10 +106,24 @@ const Investments = () => {
         <Box flexBasis="20%" pl={1}><InvestmentIndex type="currency" symbol="USDBRL" title="USD" /></Box>
       </Box>
       <Box mt={1}>
-        <Table columns={columnsTypes} data={investments?.types || []} loading={status === 'loading'} error={error} showSearch={false} showTotal={true} />
+        <Table
+          columns={columnsTypes}
+          data={investments?.types || []}
+          loading={status === 'loading'}
+          error={error}
+          showSearch={false}
+          showTotal={true}
+          onClickRow={onClickRow}
+          isRowSelected={isRowSelected}
+        />
       </Box>
       <Box mt={2}>
-        <Table columns={columnsAssets} data={investments?.assets || []} loading={status === 'loading'} error={error} />
+        <Table
+          columns={columnsAssets}
+          data={assetsFiltered || []}
+          loading={status === 'loading'}
+          error={error}
+        />
       </Box>
     </Layout>
   );
