@@ -86,7 +86,7 @@ const Investments = () => {
 
   const isRowSelected = (row) => row.type === filter;
 
-  const assetsFiltered = useMemo(() => investments?.assets ? investments.assets.filter(x => filter ? x.type === filter : true) : [], [filter]);
+  const assetsFiltered = useMemo(() => investments?.assets ? investments.assets.filter(x => filter ? x.type === filter : true) : [], [investments, filter]);
 
   return (
     <Layout>

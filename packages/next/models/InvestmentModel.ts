@@ -21,6 +21,7 @@ export default class InvestmentModel extends DbModel {
       .select(
         'ledger.description AS asset',
         'asset.type',
+        'asset.symbol',
         'account.currency',
         this.db.raw(`SUM(CASE WHEN ledger.type = '${SELL}' THEN ledger.amount * -1 ELSE ledger.amount END) AS amount`),
         this.db.raw(`SUM(ledger.value * ledger.amount * -1) AS value`),
