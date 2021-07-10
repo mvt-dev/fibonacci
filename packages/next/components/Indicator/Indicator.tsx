@@ -30,6 +30,7 @@ const Indicator = (props: IndicatorProps): React.ReactElement => {
       color={getColor()}
       label={`${numeric.currency(Math.abs(value || 0))} %`}
       icon={getIcon()}
+      style={{minWidth: '80px'}}
     />
   );
 };

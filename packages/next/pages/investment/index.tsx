@@ -34,9 +34,9 @@ const Investments = () => {
     {
       name: 'valorization',
       header: 'Valorização',
-      cell: row => <Indicator value={row.valorizationPercent} />,
+      cell: row => <><Box display="inline" mr={1}>R$ {numeric.currency(row.valorization)}</Box><Indicator value={row.valorizationPercent} /></>,
       align: 'right',
-      total: () => <Indicator value={investments.total.valorizationPercent} />,
+      total: () => <><Box display="inline" mr={1}>R$ {numeric.currency(investments.total.valorization)}</Box><Indicator value={investments.total.valorizationPercent} /></>,
       sort: (order, a, b) => order === 'asc' ? a.valorizationPercent - b.valorizationPercent : b.valorizationPercent - a.valorizationPercent
     },
     {
