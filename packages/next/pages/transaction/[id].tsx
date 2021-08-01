@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import NextLink from 'next/link';
@@ -30,6 +30,8 @@ const Transaction = (props: TransactionProps) => {
   const { id } = props;
   const [showRemove, setShowRemove] = useState<boolean>(false);
   const [accountType, setAccounType] = useState(null);
+  const [redirect, setRedirect] = useState(true);
+  const [date, setDate] = useState(moment());
   const { records: accounts } = useSelector((state: any) => state.accounts);
   const { records: categories } = useSelector((state: any) => state.categories);
   
@@ -40,6 +42,10 @@ const Transaction = (props: TransactionProps) => {
   const router = useRouter();
 
   const {data: transaction, loading} = id !== 'new' ? useService(get, id) : { data: null, loading: false };
+
+  useEffect(() => {
+    if (transaction) setDate(moment.utc(transaction.date));
+  }, [transaction]);
 
   const types = accountType === AccountType.Investment ? [
     {value: TransactionType.Buy, label: 'Compra'},
@@ -68,7 +74,7 @@ const Transaction = (props: TransactionProps) => {
     }
   }
 
-  const onSubmit = async (formData) => {
+  const onSubmit = useCallback(async (formData) => {
     try {
       const data = {
         ...formData,
@@ -86,15 +92,16 @@ const Transaction = (props: TransactionProps) => {
       dispatch(fetchInvestment({ force: true }));
       dispatch(fetchExpenses({ force: true }));
       dispatch(fetchBalance({ force: true }));
-      router.back();
+      if (redirect) router.back();
     } catch (error) {
       dispatch(snackbarShowError(error?.response?.data?.message || 'Erro interno! Por favor tente novamente.'));
     }
-  };
+  }, [redirect]);
 
   const onRemove = async () => {
     try {
       await remove(Number(id));
+      dispatch(fetchTransactions({ force: true }));
       router.back();
       dispatch(snackbarShowSuccess('Transação removida com sucesso'));
     } catch (error) {
@@ -104,6 +111,9 @@ const Transaction = (props: TransactionProps) => {
 
   const classes = makeStyles((theme) => ({
     cancelButton: {
+      marginLeft: theme.spacing(2)
+    },
+    confirmContinueButton: {
       marginLeft: theme.spacing(2)
     }
   }))();
@@ -124,7 +134,7 @@ const Transaction = (props: TransactionProps) => {
         <Box mb={3}>
           <FieldDate
             name="date"
-            value={transaction?.date ? moment.utc(transaction.date) : moment()}
+            value={date}
             label="Data"
             rules={{required: true}}
           />
@@ -187,7 +197,8 @@ const Transaction = (props: TransactionProps) => {
         )}
         <Box display="flex" justifyContent="space-between">
           <Box>
-            <Button type="submit" variant="contained" color="primary">Confirmar</Button>
+            <Button type="submit" variant="contained" color="primary" onClick={() => setRedirect(true)}>Confirmar</Button>
+            <Button type="submit" variant="contained" color="primary" className={classes.confirmContinueButton} onClick={() => setRedirect(false)}>Confirmar & Continuar</Button>
             <NextLink href="/transaction" replace><Button className={classes.cancelButton} variant="outlined" color="primary">Cancelar</Button></NextLink>
           </Box>
           {id !== 'new' && (
