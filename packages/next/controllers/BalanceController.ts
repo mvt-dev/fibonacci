@@ -55,6 +55,9 @@ export default class BalanceController {
       results.push(result);
       date.subtract(1, 'month').endOf('month');
     } while (moment().year() === date.year())
+    results.forEach((x, i) => {
+      x.grow = i < results.length - 1 ? (x.result / results[i + 1].result - 1) * 100 : 0
+    });
     return results.sort((a, b) => b.month.localeCompare(a.month));
   }
 

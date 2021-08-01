@@ -6,6 +6,7 @@ import Layout from '../../components/Layout';
 import Table from '../../components/Table';
 import numeric from '../../libs/numeric';
 import { fetchBalance } from '../../store/actions/balance';
+import Indicator from '../../components/Indicator';
 
 const Balance = () => {
   const dispatch = useDispatch();
@@ -63,7 +64,7 @@ const Balance = () => {
       name: 'result',
       header: 'Resultado',
       align: 'right',
-      cell: row => <Typography variant="subtitle2">R$ {numeric.currency(row.result)}</Typography>,
+      cell: row => <><Box display="inline" mr={1}>R$ {numeric.currency(row.result)}</Box><Indicator value={row.grow} /></>,
       sort: (order, a, b) => order === 'asc' ? a.result - b.result : b.result - a.result
     }
   ];
