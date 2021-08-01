@@ -27,4 +27,8 @@ export const MENUS = [
     href: '/asset',
     text: 'Cotações'
   },
+  {
+    href: '/trade',
+    text: 'Trades'
+  },
 ];
