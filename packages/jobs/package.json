@@ -5,12 +5,16 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "build": "rm -rf dist && rm -f tsconfig.tsbuildinfo && tsc --build"
+    "build": "rm -rf dist && rm -f tsconfig.tsbuildinfo && tsc --build",
+    "test": "jest --watchAll"
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^27.4.0",
     "@types/node": "^14.14.31",
     "@types/pg": "^8.6.0",
+    "jest": "^27.4.7",
+    "ts-jest": "^27.1.3",
     "ts-node": "^9.1.1",
     "tslint": "^6.1.3",
     "typescript": "^4.2.2"
