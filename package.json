@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "docker": "docker-compose build && docker-compose up",
+    "docker": "docker-compose build nextjs && docker-compose up nextjs",
     "next": "yarn workspace @fibonacci/next",
     "jobs": "yarn workspace @fibonacci/jobs",
     "dump": "docker exec fibonacci_db_1 pg_dump -Upostgres fibonacci > fibonacci.sql"

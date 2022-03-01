@@ -35,3 +35,11 @@ export const remove = async (id: number | string) => {
   const { data } = await request.delete(`${ENDPOINT}/${id}`);
   return data;
 }
+
+export const getPrices = async (id: number | string, from: string, to: string) => {
+  const { data } = await request.get(`${ENDPOINT}/${id}/price`, { params: {
+    from,
+    to,
+  }});
+  return data;
+}

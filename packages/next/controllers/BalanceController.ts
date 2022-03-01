@@ -30,7 +30,7 @@ export default class BalanceController {
       if (date.month() === moment().month()) {
         currency = await this.financeModel.getCurrency('USDBRL');
       } else {
-        const _currency = await this.assetModel.getPrice('USD', date);
+        const _currency = await this.assetModel.getLastPrice('USD', date);
         currency = { closePrice: _currency.close };
       }
       const result = balances.reduce((acc: any, cur: any) => {

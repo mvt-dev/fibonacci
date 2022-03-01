@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import NextLink from 'next/link';
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { Typography, Box, Breadcrumbs, Button, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Layout from '../../components/Layout';
-import Form from '../../components/Form';
-import { FieldText, FieldSelect } from '../../components/Field';
-import { AssetType } from '../../interfaces/AssetInterface';
-import useService from '../../hooks/useService';
-import { snackbarShowSuccess, snackbarShowError } from '../../store/actions/snackbar';
-import DialogAlert from '../../components/DialogAlert';
-import { get, create, update, remove } from '../../services/assetService';
-import { fetchAssets } from '../../store/actions/assets';
+import Layout from '../../../components/Layout';
+import Form from '../../../components/Form';
+import { FieldText, FieldSelect } from '../../../components/Field';
+import { AssetType } from '../../../interfaces/AssetInterface';
+import useService from '../../../hooks/useService';
+import { snackbarShowSuccess, snackbarShowError } from '../../../store/actions/snackbar';
+import DialogAlert from '../../../components/DialogAlert';
+import { get, create, update, remove } from '../../../services/assetService';
+import { fetchAssets } from '../../../store/actions/assets';
 
 const Asset = () => {
   const [showRemove, setShowRemove] = useState<boolean>(false);
@@ -81,7 +81,6 @@ const Asset = () => {
             name="symbol"
             value={asset?.symbol}
             label="Símbolo"
-            rules={{required: true}}
           />
         </Box>
         <Box mb={3}>

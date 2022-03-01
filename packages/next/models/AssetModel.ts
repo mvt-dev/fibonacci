@@ -1,5 +1,6 @@
 import DbModel from './DbModel';
 import { Asset, AssetPrice } from '../interfaces/AssetInterface';
+import { TransactionType } from '../interfaces/TransactionInterface';
 import moment from 'moment';
 
 /**
@@ -61,7 +62,7 @@ export default class AssetModel extends DbModel {
     return this.db(this.table).where('id', id).del();
   }
 
-  async getPrice(asset: string, date: Date): Promise<AssetPrice> {
+  async getLastPrice(asset: string, date: Date): Promise<AssetPrice> {
     return this.db('asset_price')
       .leftJoin('asset', 'asset.id', 'asset_price.asset')
       .where('asset.name', asset)
@@ -73,6 +74,23 @@ export default class AssetModel extends DbModel {
           .where('asset_price.date', '<=', moment(date).format('YYYY-MM-DD'))
       )
       .first();
+  }
+
+  async getPrices(asset: number, from: Date, to: Date): Promise<AssetPrice> {
+    return this.db('asset_price')
+      .leftJoin('asset', 'asset.id', 'asset_price.asset')
+      .select(
+        'asset_price.*',
+        this.db.raw(`(
+          SELECT SUM(ledger.value * ledger.amount * -1) / SUM(CASE WHEN ledger.type = '${TransactionType.Sell}' THEN ledger.amount * -1 ELSE ledger.amount END)
+          FROM ledger
+          WHERE ledger.description = asset.name AND (ledger.type = '${TransactionType.Buy}' OR ledger.type = '${TransactionType.Sell}')
+          AND ledger.date <= asset_price.date
+        ) AS position`),
+      )
+      .where('asset_price.asset', asset)
+      .whereBetween('asset_price.date', [from, to])
+      .orderBy('asset_price.date');
   }
 
 }

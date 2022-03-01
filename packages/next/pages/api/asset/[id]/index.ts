@@ -1,8 +1,8 @@
-import { validation, isValid } from '../../../libs/validation';
-import AssetController from '../../../controllers/AssetController';
-import { AssetType } from '../../../interfaces/AssetInterface';
-import middlewareDefaultError from '../../../middlewares/middlewareDefaultError';
-import middlewareValidationError from '../../../middlewares/middlewareValidationError';
+import { validation, isValid } from '../../../../libs/validation';
+import AssetController from '../../../../controllers/AssetController';
+import { AssetType } from '../../../../interfaces/AssetInterface';
+import middlewareDefaultError from '../../../../middlewares/middlewareDefaultError';
+import middlewareValidationError from '../../../../middlewares/middlewareValidationError';
 
 const assetControler = new AssetController();
 

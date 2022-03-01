@@ -36,7 +36,7 @@ const Balance = () => {
       name: 'valorization',
       header: 'Valorização',
       align: 'right',
-      cell: row => <Typography variant="body2" color="primary">R$ {numeric.currency(row.valorization)} ({numeric.currency(row.valorizationPercent)}%)</Typography>,
+      cell: row => <><Box display="inline" mr={1}>R$ {numeric.currency(row.valorization)}</Box><Indicator value={row.valorizationPercent} /></>,
       sort: (order, a, b) => order === 'asc' ? a.valorization - b.valorization : b.valorization - a.valorization
     },
     {
@@ -48,14 +48,14 @@ const Balance = () => {
     },
     {
       name: 'gain',
-      header: 'Ganhos',
+      header: 'Receitas',
       align: 'right',
       cell: row => <Typography variant="body2" color="primary">R$ {numeric.currency(row.gain)}</Typography>,
       sort: (order, a, b) => order === 'asc' ? a.gain - b.gain : b.gain - a.gain
     },
     {
       name: 'cost',
-      header: 'Gastos',
+      header: 'Despesas',
       align: 'right',
       cell: row => <Typography variant="body2" color="secondary">R$ {numeric.currency(row.cost)}</Typography>,
       sort: (order, a, b) => order === 'asc' ? a.cost - b.cost : b.cost - a.cost

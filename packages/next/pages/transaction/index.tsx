@@ -71,7 +71,7 @@ const Transactions = () => {
 
   useEffect(() => {
     dispatch(setAccount(accountWatch));
-  }, [accountWatch])
+  }, [accountWatch]);
 
   const setDate = (days: number) => {
     formMethods.setValue('date-from', moment().subtract(days, 'days'));

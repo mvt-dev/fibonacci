@@ -1,4 +1,4 @@
-import { Asset } from '../interfaces/AssetInterface';
+import { Asset, AssetPrice } from '../interfaces/AssetInterface';
 import AssetModel from '../models/AssetModel';
 
 /**
@@ -30,6 +30,10 @@ export default class AssetController {
 
   async remove(id: number): Promise<void> {
     await this.assetModel.remove(id);
+  }
+
+  async getPrices(asset: number, from: Date, to: Date): Promise<AssetPrice[]> {
+    return this.assetModel.getPrices(asset, from, to);
   }
 
 }

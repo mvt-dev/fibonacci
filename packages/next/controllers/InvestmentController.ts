@@ -25,7 +25,7 @@ export default class InvestmentController {
     let currency;
     if (endDate) {
       investments = await this.model.list(endDate);
-      const _currency = await this.assetModel.getPrice('USD', endDate);
+      const _currency = await this.assetModel.getLastPrice('USD', endDate);
       currency = _currency ? { closePrice: _currency.close, previousPrice: _currency.open } : { closePrice: 1, previousPrice: 1 };
     } else {
       investments = await this.model.list(moment());
