@@ -5,6 +5,7 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 import d3Tip from 'd3-tip';
 import moment from 'moment';
 import Indicator from '../Indicator';
+import numeric from '../../libs/numeric';
 
 const useStyles = makeStyles((theme) => ({
   chart: {
@@ -28,8 +29,8 @@ const MultilineChart = ({ data }) => {
   const tooltip = (d) => ReactDOMServer.renderToStaticMarkup(
     <React.Fragment>
       <p>{moment.utc(d.date).format('DD/MM/YYYY')}</p>
-      <p>{d.value}</p>
-      <p>{d.position}</p>
+      <p>Cotação: {d.value}</p>
+      <p>Preço Médio: {numeric.currency(d.position)}</p>
       <Indicator value={(d.value / d.position - 1) * 100} />
     </React.Fragment>
   );

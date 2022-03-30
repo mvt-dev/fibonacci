@@ -8,7 +8,7 @@ const mockCreate = jest.fn(() => Promise.resolve());
 const mockUpdate = jest.fn(() => Promise.resolve());
 const mockRemove = jest.fn(() => Promise.resolve());
 
-jest.mock('../../models/Account', () => {
+jest.mock('../models/AccountModel', () => {
   return jest.fn().mockImplementation(() => {
     return {
       list: mockList,

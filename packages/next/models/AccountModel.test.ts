@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Knex } from 'knex';
 import AccountModel from './AccountModel';
 import MOCK_ACCOUNTS from '../../../mock/accounts.json';
@@ -14,6 +15,7 @@ describe('AccountModel', () => {
       table.increments();
       table.string('name');
       table.string('type');
+      table.string('currency');
     });
     await accountModel.db.batchInsert(TABLE, MOCK_ACCOUNTS.map(({ name, type }) => ({
       name,

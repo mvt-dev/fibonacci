@@ -5,6 +5,7 @@ import NextLink from 'next/link';
 import {Typography, IconButton, Box, Breadcrumbs} from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
+import MoneyIcon from '@material-ui/icons/AttachMoney';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
 import { AssetType } from '../../interfaces/AssetInterface';
@@ -50,6 +51,16 @@ const Assets = () => {
       cell: (row) => (
         <NextLink href={`/asset/${row.id}`}>
           <IconButton color="primary" size="small"><EditIcon fontSize="small" /></IconButton>
+        </NextLink>
+      ),
+      align: 'right'
+    },
+    {
+      name: 'action',
+      header: '',
+      cell: (row) => (
+        <NextLink href={`/asset/${row.id}/price`}>
+          <IconButton color="primary" size="small"><MoneyIcon fontSize="small" /></IconButton>
         </NextLink>
       ),
       align: 'right'
