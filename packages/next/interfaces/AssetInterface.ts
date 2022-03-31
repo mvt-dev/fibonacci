@@ -4,6 +4,7 @@ export enum AssetType {
   ReitBR = 'REIT_BR',
   FixedBR = 'FIXED_BR',
   Crypto = 'CRYPTO',
+  Currency = 'CURRENCY',
 }
 
 export interface Asset {

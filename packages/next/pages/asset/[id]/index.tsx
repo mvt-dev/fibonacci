@@ -95,6 +95,7 @@ const Asset = () => {
               {value: AssetType.ReitBR, label: 'FII'},
               {value: AssetType.StockUS, label: 'Stock'},
               {value: AssetType.Crypto, label: 'Criptomoeda'},
+              {value: AssetType.Currency, label: 'Moeda'},
             ]}
           />
         </Box>

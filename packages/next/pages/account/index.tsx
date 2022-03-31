@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import Layout from '../../components/Layout';
 import Table from '../../components/Table';
-import { AccountType } from '../../interfaces/AccountInterface';
+import { AccountType, AccountCurrencySymbol } from '../../interfaces/AccountInterface';
 import { fetchAccounts } from '../../store/actions/accounts';
 import numeric from '../../libs/numeric';
 
@@ -36,7 +36,7 @@ const Accounts = () => {
     {
       name: 'balance',
       header: 'Saldo',
-      cell: (row) => <Typography variant="body2" color={row.balance < 0 ? 'secondary' : 'primary'}>{numeric.currency(row.balance)}</Typography>,
+      cell: (row) => <Typography variant="body2" color={row.balance < 0 ? 'secondary' : 'primary'}>{AccountCurrencySymbol[row.currency]} {numeric.currency(row.balance)}</Typography>,
       align: 'right'
     },
     {

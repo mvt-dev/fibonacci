@@ -7,6 +7,13 @@ export enum AccountType {
 export enum AccountCurrency {
   BRL = 'BRL',
   USD = 'USD',
+  EUR = 'EUR',
+}
+
+export enum AccountCurrencySymbol {
+  BRL = 'R$',
+  USD = '$',
+  EUR = '€',
 }
 
 export interface Account {

@@ -97,6 +97,7 @@ const Account = () => {
             options={[
               {value: AccountCurrency.BRL, label: 'R$ (BRL)'},
               {value: AccountCurrency.USD, label: '$ (USD)'},
+              {value: AccountCurrency.EUR, label: '€ (EUR)'},
             ]}
           />
         </Box>

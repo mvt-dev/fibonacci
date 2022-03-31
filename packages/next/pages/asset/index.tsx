@@ -36,6 +36,7 @@ const Assets = () => {
           case AssetType.ReitBR: return 'FII';
           case AssetType.StockUS: return 'Stock';
           case AssetType.Crypto: return 'Criptomoedas';
+          case AssetType.Currency: return 'Moeda';
           default: return '-';
         }
       }
@@ -56,7 +57,7 @@ const Assets = () => {
       align: 'right'
     },
     {
-      name: 'action',
+      name: 'action2',
       header: '',
       cell: (row) => (
         <NextLink href={`/asset/${row.id}/price`}>

@@ -26,17 +26,21 @@ export default class BalanceController {
     const date = moment();
     do {
       const balances = await this.model.list(date.clone().startOf('month').format('YYYY-MM-DD'), date.format('YYYY-MM-DD'));
-      let currency: any;
+      let currency: any = { USD: null, EUR: null };
       if (date.month() === moment().month()) {
-        currency = await this.financeModel.getCurrency('USDBRL');
+        currency.USD = await this.financeModel.getCurrency('USDBRL');
+        currency.EUR = await this.financeModel.getCurrency('EURBRL');
       } else {
-        const _currency = await this.assetModel.getLastPrice('USD', date);
-        currency = { closePrice: _currency.close };
+        const usdCurrency = await this.assetModel.getLastPrice('USD', date);
+        currency.USD = { closePrice: usdCurrency?.close || 1 };
+        const eurCurrency = await this.assetModel.getLastPrice('EUR', date);
+        currency.EUR = { closePrice: eurCurrency?.close || 1 };
       }
+      console.log(currency);
       const result = balances.reduce((acc: any, cur: any) => {
-        acc.balance += cur.currency === 'USD' ? cur.balance * currency.closePrice : cur.balance;
-        acc.invested += cur.currency === 'USD' ? cur.invested * currency.closePrice * -1 : cur.invested * -1;
-        acc.profit += cur.currency === 'USD' ? cur.profit * currency.closePrice : cur.profit;
+        acc.balance += cur.currency !== 'BRL' ? cur.balance * currency[cur.currency].closePrice : cur.balance;
+        acc.invested += cur.currency !== 'BRL' ? cur.invested * currency[cur.currency].closePrice * -1 : cur.invested * -1;
+        acc.profit += cur.currency !== 'BRL' ? cur.profit * currency[cur.currency].closePrice : cur.profit;
         acc.gain += cur.gain;
         acc.cost += cur.cost * -1;
         return acc;
