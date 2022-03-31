@@ -28,8 +28,11 @@ const AssetPrice = () => {
     }
   });
 
+  // @ts-ignore
   const dateFromWatch = formMethods.watch('date-from');
+  // @ts-ignore
   const dateToWatch = formMethods.watch('date-to');
+  // @ts-ignore
   const assetWatch = formMethods.watch('asset');
 
   useEffect(() => {
