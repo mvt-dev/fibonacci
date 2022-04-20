@@ -61,6 +61,7 @@ const Investments = () => {
           case 'STOCK_US': return 'Stock';
           case 'REIT_US': return 'REIT';
           case 'CRYPTO': return 'Criptomoedas';
+          case 'CASH': return 'Caixa';
           default: return '-';
         }
       }
