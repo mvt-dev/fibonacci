@@ -105,11 +105,12 @@ export default class InvestmentController {
       asset: account.name,
       currentValue: account.balance * currencies[account.currency].closePrice,
       value: account.balance * currencies[account.currency].closePrice,
-      closePrice: null,
-      previousPrice: null,
+      closePrice: currencies[account.currency].closePrice,
+      previousPrice: currencies[account.currency].previousPrice,
       variation: (currencies[account.currency].closePrice / currencies[account.currency].previousPrice - 1) * 100,
       valorization: 0,
       valorizationPercent: 0,
+      amount: account.balance,
     })));
     // Total
     const response: any = { total: {} };
