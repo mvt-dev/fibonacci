@@ -17,6 +17,11 @@ const fetchError = error => ({
   payload: error
 });
 
+export const ACCOUNTS_REFRESH = 'accounts/refresh';
+export const refresh = () => ({
+  type: ACCOUNTS_REFRESH,
+});
+
 export const fetchAccounts = ({ force } = { force: false }) => async (dispatch, getState) => {
   const state = getState();
   if (force || state.accounts.status === 'idle') {

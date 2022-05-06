@@ -1,7 +1,8 @@
 import {
   ACCOUNTS_FETCH_START,
   ACCOUNTS_FETCH_SUCCESS,
-  ACCOUNTS_FETCH_ERROR
+  ACCOUNTS_FETCH_ERROR,
+  ACCOUNTS_REFRESH,
 } from '../actions/accounts';
 
 const initialState = {
@@ -28,6 +29,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         status: 'error',
         error: action.payload
+      };
+    case ACCOUNTS_REFRESH:
+      return {
+        ...state,
+        status: 'idle',
       };
     default:
       return state;

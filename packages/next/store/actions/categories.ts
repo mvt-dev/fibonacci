@@ -17,6 +17,11 @@ const fetchError = error => ({
   payload: error
 });
 
+export const CATEGORIES_REFRESH = 'categories/refresh';
+export const refresh = () => ({
+  type: CATEGORIES_REFRESH,
+});
+
 export const fetchCategories = ({ force } = { force: false }) => async (dispatch, getState) => {
   const state = getState();
   if (force || state.categories.status === 'idle') {

@@ -1,7 +1,8 @@
 import {
   CATEGORIES_FETCH_START,
   CATEGORIES_FETCH_SUCCESS,
-  CATEGORIES_FETCH_ERROR
+  CATEGORIES_FETCH_ERROR,
+  CATEGORIES_REFRESH,
 } from '../actions/categories';
 
 const initialState = {
@@ -28,6 +29,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         status: 'error',
         error: action.payload
+      };
+    case CATEGORIES_REFRESH:
+      return {
+        ...state,
+        status: 'idle',
       };
     default:
       return state;

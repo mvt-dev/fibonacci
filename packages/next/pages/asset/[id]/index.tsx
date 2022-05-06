@@ -13,7 +13,7 @@ import useService from '../../../hooks/useService';
 import { snackbarShowSuccess, snackbarShowError } from '../../../store/actions/snackbar';
 import DialogAlert from '../../../components/DialogAlert';
 import { get, create, update, remove } from '../../../services/assetService';
-import { fetchAssets } from '../../../store/actions/assets';
+import { refresh } from '../../../store/actions/assets';
 
 const Asset = () => {
   const [showRemove, setShowRemove] = useState<boolean>(false);
@@ -31,7 +31,7 @@ const Asset = () => {
         await create(formData);
         dispatch(snackbarShowSuccess('Cotação criada com sucesso'));
       }
-      dispatch(fetchAssets({ force: true }));
+      dispatch(refresh());
       router.back();
     } catch (error) {
       dispatch(snackbarShowError(error?.response?.data?.message || 'Erro interno! Por favor tente novamente.'));
@@ -41,7 +41,7 @@ const Asset = () => {
   const onRemove = async () => {
     try {
       await remove(Number(id));
-      dispatch(fetchAssets({ force: true }));
+      dispatch(refresh());
       router.back();
       dispatch(snackbarShowSuccess('Cotação removida com sucesso'));
     } catch (error) {

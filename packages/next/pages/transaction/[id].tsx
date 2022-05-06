@@ -15,12 +15,12 @@ import { get, create, update, remove } from '../../services/transactionService';
 import moment from 'moment';
 import { AccountType } from '../../interfaces/AccountInterface';
 import { TransactionType } from '../../interfaces/TransactionInterface';
-import { fetchTransactions } from '../../store/actions/transactions';
-import { fetchAccounts } from '../../store/actions/accounts';
-import { fetchCategories } from '../../store/actions/categories';
-import { fetchInvestment } from '../../store/actions/investment';
-import { fetchExpenses } from '../../store/actions/expenses';
-import { fetchBalance } from '../../store/actions/balance';
+import { refresh as refreshTransactions } from '../../store/actions/transactions';
+import { fetchAccounts, refresh as refreshAccounts } from '../../store/actions/accounts';
+import { fetchCategories, refresh as refreshCategories } from '../../store/actions/categories';
+import { refresh as refreshInvestment } from '../../store/actions/investment';
+import { refresh as refreshExpenses } from '../../store/actions/expenses';
+import { refresh as refreshBalance } from '../../store/actions/balance';
 
 interface TransactionProps {
   id: string;
@@ -87,11 +87,11 @@ const Transaction = (props: TransactionProps) => {
         await create(data);
         dispatch(snackbarShowSuccess('Transação criada com sucesso'));
       }
-      dispatch(fetchTransactions({ force: true }));
-      dispatch(fetchAccounts({ force: true }));
-      dispatch(fetchInvestment({ force: true }));
-      dispatch(fetchExpenses({ force: true }));
-      dispatch(fetchBalance({ force: true }));
+      dispatch(refreshTransactions());
+      dispatch(refreshAccounts());
+      dispatch(refreshInvestment());
+      dispatch(refreshExpenses());
+      dispatch(refreshBalance());
       if (redirect) router.back();
     } catch (error) {
       dispatch(snackbarShowError(error?.response?.data?.message || 'Erro interno! Por favor tente novamente.'));
@@ -101,7 +101,7 @@ const Transaction = (props: TransactionProps) => {
   const onRemove = async () => {
     try {
       await remove(Number(id));
-      dispatch(fetchTransactions({ force: true }));
+      dispatch(refreshTransactions());
       router.back();
       dispatch(snackbarShowSuccess('Transação removida com sucesso'));
     } catch (error) {

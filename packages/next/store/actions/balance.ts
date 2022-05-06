@@ -17,6 +17,11 @@ const fetchError = error => ({
   payload: error
 });
 
+export const BALANCE_REFRESH = 'balance/refresh';
+export const refresh = () => ({
+  type: BALANCE_REFRESH,
+});
+
 export const fetchBalance = ({ force } = { force: false }) => async (dispatch, getState) => {
   const state = getState();
   if (force || state.balance.status === 'idle') {

@@ -1,7 +1,8 @@
 import {
   EXPENSES_FETCH_START,
   EXPENSES_FETCH_SUCCESS,
-  EXPENSES_FETCH_ERROR
+  EXPENSES_FETCH_ERROR,
+  EXPENSES_REFRESH,
 } from '../actions/expenses';
 
 const initialState = {
@@ -28,6 +29,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         status: 'error',
         error: action.payload
+      };
+    case EXPENSES_REFRESH:
+      return {
+        ...state,
+        status: 'idle',
       };
     default:
       return state;

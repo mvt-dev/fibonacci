@@ -1,7 +1,8 @@
 import {
   BALANCE_FETCH_START,
   BALANCE_FETCH_SUCCESS,
-  BALANCE_FETCH_ERROR
+  BALANCE_FETCH_ERROR,
+  BALANCE_REFRESH,
 } from '../actions/balance';
 
 const initialState = {
@@ -28,6 +29,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         status: 'error',
         error: action.payload
+      };
+    case BALANCE_REFRESH:
+      return {
+        ...state,
+        status: 'idle',
       };
     default:
       return state;

@@ -1,4 +1,3 @@
-import { boolean } from 'joi';
 import { list } from '../../services/transactionService';
 
 export const TRANSACTIONS_FETCH_START = 'transactions/fetchStart';
@@ -17,6 +16,11 @@ export const TRANSACTIONS_FETCH_ERROR = 'transactions/fetchError';
 const fetchError = error => ({
   type: TRANSACTIONS_FETCH_ERROR,
   payload: error
+});
+
+export const TRANSACTIONS_REFRESH = 'transactions/refresh';
+export const refresh = () => ({
+  type: TRANSACTIONS_REFRESH,
 });
 
 export const fetchTransactions = (props: { force?: boolean, dateFrom?: string, dateTo?: string }) => async (dispatch, getState) => {

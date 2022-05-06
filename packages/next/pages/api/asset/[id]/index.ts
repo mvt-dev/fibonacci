@@ -32,7 +32,7 @@ const create = async (req, res) => {
   try {
     const { error, name, symbol, type } = isValid(req.body, {
       name: validation.string().required(),
-      symbol: validation.string().required(),
+      symbol: validation.string().empty(''),
       type: validation.string().valid(...Object.values(AssetType)).required(),
     });
     if (error) return middlewareValidationError(error, res);
@@ -52,7 +52,7 @@ const update = async (req, res) => {
     const { error, id, name, symbol, type } = isValid({ ...req.query, ...req.body }, {
       id: validation.number().integer(),
       name: validation.string().required(),
-      symbol: validation.string().required(),
+      symbol: validation.string().empty(''),
       type: validation.string().valid(...Object.values(AssetType)).required(),
     });
     if (error) return middlewareValidationError(error, res);

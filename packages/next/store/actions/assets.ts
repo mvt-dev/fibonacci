@@ -17,6 +17,11 @@ const fetchError = error => ({
   payload: error
 });
 
+export const ASSETS_REFRESH = 'asset/refresh';
+export const refresh = () => ({
+  type: ASSETS_REFRESH,
+});
+
 export const fetchAssets = ({ force } = { force: false }) => async (dispatch, getState) => {
   const state = getState();
   if (force || state.assets.status === 'idle') {

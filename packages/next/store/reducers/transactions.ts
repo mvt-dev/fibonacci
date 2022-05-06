@@ -3,7 +3,8 @@ import {
   TRANSACTIONS_FETCH_START,
   TRANSACTIONS_FETCH_SUCCESS,
   TRANSACTIONS_FETCH_ERROR,
-  TRANSACTIONS_SET_ACCOUNT
+  TRANSACTIONS_SET_ACCOUNT,
+  TRANSACTIONS_REFRESH,
 } from '../actions/transactions';
 
 const initialState = {
@@ -41,6 +42,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         account: action.payload
+      };
+    case TRANSACTIONS_REFRESH:
+      return {
+        ...state,
+        status: 'idle',
       };
     default:
       return state;

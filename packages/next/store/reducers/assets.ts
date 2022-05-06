@@ -1,7 +1,8 @@
 import {
   ASSETS_FETCH_START,
   ASSETS_FETCH_SUCCESS,
-  ASSETS_FETCH_ERROR
+  ASSETS_FETCH_ERROR,
+  ASSETS_REFRESH,
 } from '../actions/assets';
 
 const initialState = {
@@ -28,6 +29,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         status: 'error',
         error: action.payload
+      };
+    case ASSETS_REFRESH:
+      return {
+        ...state,
+        status: 'idle',
       };
     default:
       return state;

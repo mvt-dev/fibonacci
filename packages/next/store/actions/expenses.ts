@@ -17,6 +17,11 @@ const fetchError = error => ({
   payload: error
 });
 
+export const EXPENSES_REFRESH = 'expenses/refresh';
+export const refresh = () => ({
+  type: EXPENSES_REFRESH,
+});
+
 export const fetchExpenses = ({ force } = { force: false }) => async (dispatch, getState) => {
   const state = getState();
   if (force || state.expenses.status === 'idle') {
